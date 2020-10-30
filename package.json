@@ -1,1 +1,23 @@
-
+{
+  "name": "wf_rsd-bot-v12",
+  "version": "12.2020.10.30",
+  "description": "Bot for clan.",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "discord.js": "^12.4.0"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "discord",
+    "nodejs",
+    "bot"
+  ]
+}
