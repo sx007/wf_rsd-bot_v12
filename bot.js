@@ -5,19 +5,18 @@ let config = require('./botconfig.json');
 //"достаём" токен и префикс
 let token = config.token; 
 let prefix = config.prefix;
-//создаём ссылку-приглашение для бота
 
 bot.on('ready', () => { 
-    // Set the client user's presence
-    bot.user.setPresence({ activity: { name: 'Warface RU' }, status: 'online' })
+    // Если всё хорошо, то выводим в консоль информаию
+    bot.user.setPresence({ activity: { name: 'Warface RU' }, status: 'online'})
     //.then(console.log)
     //.catch(console.error);
 
 
-    console.log(`Запустился бот ${bot.user.username}`);
-    bot.generateInvite(["ADMINISTRATOR"]).then(link => { 
-        console.log(link);
-    });
+    console.log(`Запустился бот ${bot.user.username} ${ Date.now()}`);
+    //bot.generateInvite(["ADMINISTRATOR"]).then(link => { 
+        //console.log(link);
+    //});
 });
 
 bot.on("message", function(message) {
