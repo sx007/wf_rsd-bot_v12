@@ -6,16 +6,14 @@ const bot = new Discord.Client();
 let token = process.env.BOT_TOKEN; 
 let prefix = process.env.PREFIX;
 
-//Вывод сообщения о работе и готовности бота
+/* Вывод сообщения о работе и готовности бота */
 bot.on('ready', () => { 
     // Если всё хорошо, то выводим статус ему + в консоль информаию
     bot.user.setPresence({ activity: { name: 'Warface RU' }, status: 'online'})
-    //.then(console.log)
-    //.catch(console.error);
     console.log(`Запустился бот ${bot.user.username} ${ Date.now()}`);
 });
 
-//Обработка сообщений
+/* Обработка сообщений */
 bot.on("message", function(message) {
 //Если это это сам же бот, то игнорировать
 if (message.author.bot) return;
@@ -44,14 +42,13 @@ function hasRole(mem, r){
 
 //Удаление из текстого канала ссылок-приглашений
 if (message.content.includes('discord.gg/') ||  message.content.includes('discordapp.com/invite/')){
-    //message.channel.send("Ссылка-приглашение");
-    //message.author.send("Ссылка-приглашение (DM)");
     //Если сообщение публичное
     if (privateMsg() == false){
-        //Если сообщение от Администратора или Модератора
+        //Если сообщение от Администратора или Модератора, то разрешаем
         if(!hasRole(message.member, "Администратор") && !hasRole(message.member, "Модераторы")){
             //Удаляем сообщение
             message.delete();
+            //Отправляем в личку сообщение пользователю
             message.author.send("Ссылки-приглашения (Invite) **запрещены** на данном сервере!\nЧтобы кого-то пригласить на другой Discord-сервер, отправьте приглашение или ссылку в личку определённому человеку.");
         }
     }
@@ -62,7 +59,10 @@ if (!message.content.startsWith(prefix)) return;
 //Получение команды из полученного сообщения
 const commandBody = message.content.slice(prefix.length);
 const args = commandBody.split(' ');
+const numArgs = args.map(x => parseFloat(x));
+const numArg = numArgs.length;
 const command = args.shift().toLowerCase();
+
 
 //Если отправлена команда ping
 if (command === "ping") {
@@ -86,10 +86,17 @@ if (command === "ping") {
 }
 
 else if (command === "sum") {
-    const numArgs = args.map(x => parseFloat(x));
-    const sum = numArgs.length;
-    message.reply(`Количество аргуметов: ${sum}!`);
+    message.reply(`Количество аргуметов: ${numArg}!`);
 }
+
+else if (command === "lol") {
+    const nArg = numArg-2;
+    message.reply("Всего аргрументов: " + nArg + " Последний аргумент: " + args[nArg] + "!");
+    message.reply("Нулевой агрумент: " + args[0]);
+    message.reply("Первый агрумент: " + args[1]);
+    //message.reply(`Последний аргумент: ${lastArg} и ${args}!`);
+}
+
 });
 
 bot.login(token);
