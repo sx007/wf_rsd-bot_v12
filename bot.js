@@ -1,22 +1,18 @@
 const Discord = require('discord.js'); 
 const bot = new Discord.Client();
 //подключаем файл конфигурации
-let config = require('./botconfig.json'); 
+//let config = require('./botconfig.json'); 
 //"достаём" токен и префикс
-let token = config.token; 
-let prefix = config.prefix;
+let token = process.env.BOT_TOKEN; 
+let prefix = process.env.PREFIX;
 
+//Вывод сообщения о работе и готовности бота
 bot.on('ready', () => { 
-    // Если всё хорошо, то выводим в консоль информаию
+    // Если всё хорошо, то выводим статус ему + в консоль информаию
     bot.user.setPresence({ activity: { name: 'Warface RU' }, status: 'online'})
     //.then(console.log)
     //.catch(console.error);
-
-
     console.log(`Запустился бот ${bot.user.username} ${ Date.now()}`);
-    //bot.generateInvite(["ADMINISTRATOR"]).then(link => { 
-        //console.log(link);
-    //});
 });
 
 bot.on("message", function(message) {
