@@ -114,13 +114,36 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
     let sysCh = bot.channels.cache.get('353436958724456448');
 
     if(!oldState.channel && newState.channel) { //если пользователь подключился к голосовому каналу
-        //console.log("Подключился к голосовому каналу", oldMember.user, newChannel.name);
-        sysCh.send(`Пользователь <@${oldMember.id}> подключился к голосовому каналу \`${newChannel.name}\``);
+        let embed = new Discord.MessageEmbed()
+        .setColor(0x005F31)
+        .setDescription(`Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nподключился к каналу: ${newChannel.name}`)
+        .setFooter("Бот клана", "")
+        .setTimestamp()
+        sysCh.send(embed);
+
+        //sysCh.send(`Пользователь <@${oldMember.id}> подключился к голосовому каналу \`${newChannel.name}\``);
         //sysCh.send("Пользователь " + oldMember.voiceChannel.user + " подключился к голосовому каналу " + newChannel.name);
     }
     if(oldState.channel && !newState.channel) { //если пользователь вышел из голосового канала
-        //console.log("Покинул голосовой канал", oldMember.user, oldChannel.name);
-        sysCh.send(`Пользователь <@${oldMember.id}> покинул голосовой канал \`${oldChannel.name}\``);
+        let embed = new Discord.MessageEmbed()
+        .setColor(0x5F0000)
+        .setDescription(`Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nпокинул канал: ${oldChannel.name}`)
+        .setFooter("Бот клана", "")
+        .setTimestamp()
+        sysCh.send(embed);
+        //sysCh.send(`Пользователь <@${oldMember.id}> покинул голосовой канал \`${oldChannel.name}\``);
+        //sysCh.send("Пользователь " + oldMember.voiceChannel.user + " покинул голосовой канал " + oldChannel.name);
+    }
+
+    if(oldState.channel && newState.channel) { //если пользователь перешёл из голосового канала в другой
+        let embed = new Discord.MessageEmbed()
+        .setColor(0x002D5F)
+        .setDescription(`Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nперешёл из голосового канала: ${oldChannel.name}\nв канал: ${newChannel.name}`)
+        //.setDescription('Пользователь: '+ newMember.user + '\nНик: `' + newMember.displayName + '`\n\nперешёл из голосового канала:  '+ oldUserChannel.name + '\nв канал:  ' + newUserChannel.name)
+        .setFooter("Бот клана", "")
+        .setTimestamp()
+        sysCh.send(embed);
+        //sysCh.send(`Пользователь <@${oldMember.id}> покинул голосовой канал \`${oldChannel.name}\``);
         //sysCh.send("Пользователь " + oldMember.voiceChannel.user + " покинул голосовой канал " + oldChannel.name);
     }
 
