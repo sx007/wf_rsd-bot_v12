@@ -7,6 +7,7 @@ const bot = new Discord.Client();
 //"достаём" токен и префикс
 let token = process.env.BOT_TOKEN; 
 let prefix = process.env.PREFIX;
+let idChMsg = process.env.ID_CHANNEL_SEND;
 
 /* Вывод сообщения о работе и готовности бота */
 bot.on('ready', () => { 
@@ -105,100 +106,81 @@ else if (command === "lol") {
 
 });
 
+/* Проверяем изменения голосовых каналов */
 bot.on("voiceStateUpdate", (oldState, newState) => {
-    //let oldServer = oldState.guild;
+    //Канал для отправки сообщения
+    let sysCh = bot.channels.cache.get(idChMsg);
+    //информация о каналах и пользователе
     let oldChannel = oldState.channel;
     let oldMember = oldState.member;
-    //let newMember = newState.member;
     let newChannel = newState.channel;
-    let sysCh = bot.channels.cache.get('353436958724456448');
 
-    if(!oldState.channel && newState.channel) { //если пользователь подключился к голосовому каналу
+    //Заготовка для Embed сообщения
+    function EmbedMsg(color, Descr){
         let embed = new Discord.MessageEmbed()
-        .setColor(0x005F31)
-        .setDescription(`Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nподключился к каналу: ${newChannel.name}`)
+        .setColor(color)
+        .setDescription(Descr)
         .setFooter("Бот клана", "")
         .setTimestamp()
-        sysCh.send(embed);
-
-        //sysCh.send(`Пользователь <@${oldMember.id}> подключился к голосовому каналу \`${newChannel.name}\``);
-        //sysCh.send("Пользователь " + oldMember.voiceChannel.user + " подключился к голосовому каналу " + newChannel.name);
+        return embed;
     }
-    if(oldState.channel && !newState.channel) { //если пользователь вышел из голосового канала
-        let embed = new Discord.MessageEmbed()
-        .setColor(0x5F0000)
-        .setDescription(`Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nпокинул канал: ${oldChannel.name}`)
-        .setFooter("Бот клана", "")
-        .setTimestamp()
-        sysCh.send(embed);
-        //sysCh.send(`Пользователь <@${oldMember.id}> покинул голосовой канал \`${oldChannel.name}\``);
-        //sysCh.send("Пользователь " + oldMember.voiceChannel.user + " покинул голосовой канал " + oldChannel.name);
+    //Пользователь подключился к голосовому каналу
+    if(!oldState.channel && newState.channel) {
+        let info = `Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nподключился к каналу:  ${newChannel.name}`;
+        sysCh.send(EmbedMsg(0x005F31, info));
+    }
+    //Пользователь вышел из голосового канала
+    if(oldState.channel && !newState.channel) {
+        let info = `Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nпокинул канал:  ${oldChannel.name}`;
+        sysCh.send(EmbedMsg(0x5F0000, info));
+    }
+    //Пользователь перешёл из голосового канала в другой
+    if(oldState.channel && newState.channel && newChannel !== oldChannel) {
+        let info = `Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nперешёл из канала:  ${oldChannel.name}\nв канал:  ${newChannel.name}`;
+        sysCh.send(EmbedMsg(0x002D5F, info));
+    }
+    //Пользователь выключил микрофон
+    if(oldState.selfMute === false && newState.selfMute === true) {
+        let info = `:microphone: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nотключил микрофон.`;
+        sysCh.send(EmbedMsg(0x8B572A, info));
+    }
+    //Пользователь включил микрофон
+    if(oldState.selfMute === true && newState.selfMute === false) {
+        let info = `:microphone: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвключил микрофон.`;
+        sysCh.send(EmbedMsg(0x8B572A, info));
+    }
+    //Пользователь отключил звук
+    if(oldState.selfDeaf === false && newState.selfDeaf === true){
+        let info = `:mute: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nотключил звук.`;
+        sysCh.send(EmbedMsg(0x8B572A, info));
+    }
+    //Пользователь включил звук
+    if(oldState.selfDeaf === true && newState.selfDeaf === false){
+        let info = `:loud_sound: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвключил звук.`;
+        sysCh.send(EmbedMsg(0x8B572A, info));
+    }
+    //Пользователь включил камеру
+    if(oldState.selfVideo === false && newState.selfVideo === true){
+        let info = `:film_frames: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвключил камеру.`;
+        sysCh.send(EmbedMsg(0x8B572A, info));
+    }
+    //Пользователь выключил камеру
+    if(oldState.selfVideo === true && newState.selfVideo === false){
+        let info = `:film_frames: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвыключил камеру.`;
+        sysCh.send(EmbedMsg(0x8B572A, info));
+    }
+    //Пользователь включил стрим
+    if(oldState.streaming === false && newState.streaming === true){
+        let info = `:red_circle: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвключил стрим.`;
+        sysCh.send(EmbedMsg(0x8B572A, info));
+    }
+    //Пользователь выключил стрим
+    if(oldState.streaming === true && newState.streaming === false){
+        let info = `:red_circle: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвыключил стрим.`;
+        sysCh.send(EmbedMsg(0x8B572A, info));
     }
 
-    if(oldState.channel && newState.channel) { //если пользователь перешёл из голосового канала в другой
-        let embed = new Discord.MessageEmbed()
-        .setColor(0x002D5F)
-        .setDescription(`Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nперешёл из голосового канала: ${oldChannel.name}\nв канал: ${newChannel.name}`)
-        //.setDescription('Пользователь: '+ newMember.user + '\nНик: `' + newMember.displayName + '`\n\nперешёл из голосового канала:  '+ oldUserChannel.name + '\nв канал:  ' + newUserChannel.name)
-        .setFooter("Бот клана", "")
-        .setTimestamp()
-        sysCh.send(embed);
-        //sysCh.send(`Пользователь <@${oldMember.id}> покинул голосовой канал \`${oldChannel.name}\``);
-        //sysCh.send("Пользователь " + oldMember.voiceChannel.user + " покинул голосовой канал " + oldChannel.name);
-    }
-
-
 });
 
-/*
-bot.on("voiceStateUpdate", (oldMember, newMember)=> { 
-let oldVoice = oldMember.voiceChannelID; 
-let newVoice = newMember.voiceChannelID; 
-if (oldVoice != newVoice) {
-    if (oldVoice == null) {
-    console.log("User joined!");
-    } else if (newVoice == null) {
-    console.log("User left!");
-    } else {
-    console.log("User switched channels!");
-    }
-}
-});
-*/
-
-/*
-bot.on('voiceChannelJoin', (member,newChannel) => {
-    console.log("Join in voice channel", member.username, newChannel.name);
-    let sysCh = bot.channels.cache.get('353436958724456448');
-    sysCh.send(member.username + " подключился к голосовому каналу [" + newChannel.name + "]");
-});
-
-bot.on('voiceChannelLeave', (member,oldChannel) => {
-    console.log("Leave voice channel", member.username, oldChannel.name);
-    let sysCh = bot.channels.cache.get('353436958724456448');
-    sysCh.send(member.username + "отключился от голосового канала [" + oldChannel.name + "]");
-});
-
-bot.on('voiceChannelSwitch', (member, newChannel, oldChannel) => {
-    console.log("Switch voice channel", member.username, oldChannel.name, newChannel.name);
-    let sysCh = bot.channels.cache.get('353436958724456448');
-    sysCh.send(member.username + " сменил голосовой канал с [" + oldChannel.name + "] на [" + newChannel.name + "]");
-});
-
-bot.on('voiceStateUpdate', (oldState,newState) => {
-    if(oldState.selfMute === true && newState.selfMute === false)
-        console.log("unmuted")
-    if(oldState.selfMute === false && newState.selfMute === true)
-        console.log("muted")
-    if(oldState.selfDeaf === true && newState.selfDeaf === false)
-        console.log("undeaf")
-    if(oldState.selfDeaf === false && newState.selfDeaf === true)
-        console.log("deaf")
-    if(oldState.selfStream === true && newState.selfStream === false)
-        console.log("UnStream")
-    if(oldState.selfStream === false && newState.selfStream === true)
-        console.log("Stream")
-});
-*/
 //Токен
 bot.login(token);
