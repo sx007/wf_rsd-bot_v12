@@ -1,10 +1,7 @@
 const Discord = require('discord.js'); 
 const bot = new Discord.Client();
-//const logs = require('discord-logs');
-//logs(bot);
-//подключаем файл конфигурации
-//let config = require('./botconfig.json'); 
-//"достаём" токен и префикс
+
+//получаем токен, префикс, id канала
 let token = process.env.BOT_TOKEN; 
 let prefix = process.env.PREFIX;
 let idChMsg = process.env.ID_CHANNEL_SEND;
@@ -15,8 +12,6 @@ bot.on('ready', () => {
     bot.user.setPresence({ activity: { name: 'Warface RU' }, status: 'online'})
     console.log(`Запустился бот ${bot.user.username} ${ Date.now()}`);
 });
-
-//const sysCh = bot.channels.cache.get('353436958724456448');
 
 /* Обработка сообщений */
 bot.on("message", function(message) {
@@ -108,6 +103,11 @@ else if (command === "lol") {
 
 /* Проверяем изменения голосовых каналов */
 bot.on("voiceStateUpdate", (oldState, newState) => {
+    //Проверяем наличие канала, куда будем отправлять сообщение
+    let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
+    //Если нет такого, то не судьба
+    if(!logChannel) return;
+
     //Канал для отправки сообщения
     let sysCh = bot.channels.cache.get(idChMsg);
     //информация о каналах и пользователе
