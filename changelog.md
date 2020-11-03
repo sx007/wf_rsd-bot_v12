@@ -1,13 +1,7 @@
 # Список изменений:
 Ниже указан список изменений данного бота.
 ***
-```diff
-- text in red
-+ text in green
-! text in orange
-# text in gray
-@@ text in purple (and bold)@@
-```
+
 ## 12.2020.11.01
 ```diff
 + Реализация слежения за голосовыми каналами.
@@ -36,4 +30,14 @@
 ## 12.2020.10.30
 ```
 * Создание заготовки для бота.
+```
+
+
+## Примечание по обозначению:
+```diff
+- text in red
++ text in green
+! text in orange
+# text in gray
+@@ text in purple (and bold)@@
 ```
