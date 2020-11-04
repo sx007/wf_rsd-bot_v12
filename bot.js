@@ -192,7 +192,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
 
 //Сообщаем о новом пользователе на сервере
 bot.on('guildMemberAdd', member => {
-    console.log("Кто-то впервые зашёл на сервер");
+    //console.log("Кто-то впервые зашёл на сервер");
     //Проверяем наличие канала, куда будем отправлять сообщение
     let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
     if(!logChannel) return;
@@ -202,7 +202,7 @@ bot.on('guildMemberAdd', member => {
     let NewUserServer = new Discord.MessageEmbed()
     .setTitle('**[Новый пользователь]**')
     .setColor(0xFDFDFD)
-    .setDescription(`Пользователь ${member}\nНик: \`${member.displayName}\`\n\nтолько что зашёл на сервер`)
+    .setDescription(`Пользователь ${member}\nНик: \`${member.displayName}\`\nНик: \`${member.user.username}#${member.user.discriminator}\`\n\nтолько что зашёл на сервер`)
     .setTimestamp()
     .setFooter("Бот клана", "")
     //Отправка сообщения
@@ -221,22 +221,22 @@ bot.on('guildMemberRemove', member => {
     let OldUserServer = new Discord.MessageEmbed()
     .setTitle('**[Покинул пользователь]**')
     .setColor(0xFDFDFD)
-    .setDescription(`Пользователь ${member}\nНик: \`${member.displayName}\`\n\nпокинул наш сервер`)
+    .setDescription(`Пользователь ${member}\nНик: \`${member.displayName}\`\nНик: \`${member.user.username}#${member.user.discriminator}\`\n\nпокинул наш сервер`)
     .setTimestamp()
     .setFooter("Бот клана", "")
     //Отправка сообщения
     sysCh.send(OldUserServer);
 });
 
-
-
-
-
-
 /* Проверка на изменение прав, ника, аватара */
 bot.on('guildMemberUpdate', function(oldMember, newMember) {
+    //Проверяем наличие канала, куда будем отправлять сообщение
+    let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
+    if(!logChannel) return;
+    //Канал для отправки сообщения
+    let sysCh = bot.channels.cache.get(idChMsg);
 
-    //declare changes
+    //объявляем изменения
     var Changes = {
         unknown: 0,
         addedRole: 1,
@@ -247,19 +247,30 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
     };
     var change = Changes.unknown;
 
-    //check if username changed
+    //Заготовка для Embed сообщения
+    function EmbedMsg(title, color, Descr){
+        let embed = new Discord.MessageEmbed()
+        .setTitle(title)
+        .setColor(color)
+        .setDescription(Descr)
+        .setFooter("Бот клана", "")
+        .setTimestamp()
+        return embed;
+    }
+
+    //Если изменился личный ник пользователя
     if (newMember.user.username !== oldMember.user.username)
         change = Changes.username;
 
-    //check if nickname changed
+    //Если изменился серверный ник пользователя
     if (newMember.nickname !== oldMember.nickname)
         change = Changes.nickname;
 
-    //check if avatar changed
+    //Если сменился аватар
     if (newMember.user.displayAvatarURL() !== oldMember.user.displayAvatarURL())
         change = Changes.avatar;
 
-    //log to console
+    //Отправляем информацию в консоль
     switch (change) {
         case Changes.unknown:
             console.log('[' + newMember.guild.name + '][UPDUSR] ' + newMember.user.username + '#' + newMember.user.discriminator);
@@ -278,45 +289,71 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
             break;
     }
 
-    //post in the guild's log channel
+    //Отправляем сообщение в канал
     var log = newMember.guild.channels.cache.find(ch => ch.id === idChMsg);
+    let info = '';
     if (log) {
         switch (change) {
+            //Неизвестное изменение
+            
             case Changes.unknown:
-                log.send('**[User Update]** ' + newMember);
+                info = `Пользователь <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\nобновил информацию.`;
+                sysCh.send(EmbedMsg('**[ИЗМЕНИЛАСЬ ИНФОРМАЦИЯ]**', 0x9013FE, info));
+                //sysCh.send('**[User Update]** ' + newMember);
                 break;
-
-
+            //Смена ника пользователя
             case Changes.username:
-                log.send('**[User Username Changed]** ' + newMember + ': Username changed from ' +
+                info = `Пользователь сменивший личный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n${oldMember.user.username}#${oldMember.user.discriminator}\n**Новый ник:**\n${newMember.user.username}#${newMember.user.discriminator}`;
+                sysCh.send(EmbedMsg('**[ИЗМЕНЕН ЛИЧНЫЙ НИК]**', 0x9013FE, info));
+                /*
+                sysCh.send('**[User Username Changed]** ' + newMember + ': Username changed from ' +
                     oldMember.user.username + '#' + oldMember.user.discriminator + ' to ' +
                     newMember.user.username + '#' + newMember.user.discriminator);
+                */
                 break;
+            //Смена серверного ника
             case Changes.nickname:
-                log.send('**[User Nickname Changed]** ' + newMember + ': ' +
+                //Для получения id пользователя, который выполнил непосредственно
+                newMember.guild.fetchAuditLogs().then(logs => {
+                    let oldNick = '';
+                    let newNick = '';
+                    
+                    //Если первоначальный ник - по умолчанию
+                    if (oldMember.nickname != null){
+                        oldNick = oldMember.nickname;
+                    } else {
+                        oldNick = 'По умолчанию';
+                    }
+                    //Если новый ник - по умолчанию
+                    if (newMember.nickname != null){
+                        newNick = newMember.nickname;
+                    } else {
+                        newNick = 'По умолчанию';
+                    }
+                    var userID = logs.entries.first().executor.id;
+                    //console.log(userID, oldMember.user.id);
+                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n${oldNick}\n**Новый ник:**\n${newNick}\n\nКто сменил:\n<@${userID}>`;
+                    //Отправляем сообщение
+                    sysCh.send(EmbedMsg('**[ИЗМЕНЕН СЕРВЕРНЫЙ НИК]**', 0x9013FE, info));
+                })
+                
+                /*
+                sysCh.send('**[User Nickname Changed]** ' + newMember + ': ' +
                     (oldMember.nickname != null ? 'Changed nickname from ' + oldMember.nickname +
                         +newMember.nickname : 'Set nickname') + ' to ' +
                     (newMember.nickname != null ? newMember.nickname + '.' : 'original username.'));
+                */
                 break;
+            //Смена аватара
             case Changes.avatar:
-                log.send('**[User Avatar Changed]** ' + newMember);
+                info = `Пользователь <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\nизменил свой аватар.`;
+                sysCh.send(EmbedMsg('**[ИЗМЕНИЛАСЬ АВАТАРКА]**', 0x9013FE, info));
+                //sysCh.send('**[User Avatar Changed]** ' + newMember);
                 break;
         }
     }
 
 });
-
-
-/*
-bot.on('guildMemberUpdate', (oldMember, newMember) => {
-
-    const oldRoles = oldMember.roles;
-    const newRoles = newMember.roles;
-
-    // Check roles and execute your code.
-    console.log(`Old ${oldRoles} New ${newRoles}`);
-});
-*/
 
 //Токен
 bot.login(token);
