@@ -114,6 +114,13 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
     let oldChannel = oldState.channel;
     let oldMember = oldState.member;
     let newChannel = newState.channel;
+    let srvNick = '';
+    //Проверяем серверный ник
+    if(oldMember.nickname == null){
+        srvNick = 'По умолчанию';
+    } else {
+        srvNick = oldMember.nickname;
+    }
 
     //Заготовка для Embed сообщения
     function EmbedMsg(color, Descr){
@@ -124,63 +131,192 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         .setTimestamp()
         return embed;
     }
+    //console.log(oldMember);
     //Пользователь подключился к голосовому каналу
     if(!oldState.channel && newState.channel) {
-        let info = `Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nподключился к каналу:  ${newChannel.name}`;
+        let info = `Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nподключился к каналу:  ${newChannel.name}`;
         sysCh.send(EmbedMsg(0x005F31, info));
     }
     //Пользователь вышел из голосового канала
     if(oldState.channel && !newState.channel) {
-        let info = `Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nпокинул канал:  ${oldChannel.name}`;
+        let info = `Пользователь <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nпокинул канал:  ${oldChannel.name}`;
         sysCh.send(EmbedMsg(0x5F0000, info));
     }
     //Пользователь перешёл из голосового канала в другой
     if(oldState.channel && newState.channel && newChannel !== oldChannel) {
-        let info = `Пользователь <@${oldMember.id}> \nНик: \`${oldMember.nickname}\`\n\nперешёл из канала:  ${oldChannel.name}\nв канал:  ${newChannel.name}`;
+        let info = `Пользователь <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nперешёл из канала:  ${oldChannel.name}\nв канал:  ${newChannel.name}`;
         sysCh.send(EmbedMsg(0x002D5F, info));
     }
     //Пользователь выключил микрофон
     if(oldState.selfMute === false && newState.selfMute === true) {
-        let info = `:microphone: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nотключил микрофон.`;
+        let info = `:microphone: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nотключил микрофон.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
     //Пользователь включил микрофон
     if(oldState.selfMute === true && newState.selfMute === false) {
-        let info = `:microphone: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвключил микрофон.`;
+        let info = `:microphone: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключил микрофон.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
     //Пользователь отключил звук
     if(oldState.selfDeaf === false && newState.selfDeaf === true){
-        let info = `:mute: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nотключил звук.`;
+        let info = `:mute: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nотключил звук.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
     //Пользователь включил звук
     if(oldState.selfDeaf === true && newState.selfDeaf === false){
-        let info = `:loud_sound: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвключил звук.`;
+        let info = `:loud_sound: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключил звук.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
     //Пользователь включил камеру
     if(oldState.selfVideo === false && newState.selfVideo === true){
-        let info = `:film_frames: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвключил камеру.`;
+        let info = `:film_frames: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключил камеру.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
     //Пользователь выключил камеру
     if(oldState.selfVideo === true && newState.selfVideo === false){
-        let info = `:film_frames: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвыключил камеру.`;
+        let info = `:film_frames: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключил камеру.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
     //Пользователь включил стрим
     if(oldState.streaming === false && newState.streaming === true){
-        let info = `:red_circle: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвключил стрим.`;
+        let info = `:red_circle: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключил стрим.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
     //Пользователь выключил стрим
     if(oldState.streaming === true && newState.streaming === false){
-        let info = `:red_circle: Пользователь <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nвыключил стрим.`;
+        let info = `:red_circle: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключил стрим.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
 
 });
+
+//Сообщаем о новом пользователе на сервере
+bot.on('guildMemberAdd', member => {
+    console.log("Кто-то впервые зашёл на сервер");
+    //Проверяем наличие канала, куда будем отправлять сообщение
+    let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
+    if(!logChannel) return;
+    //Канал для отправки сообщения
+    let sysCh = bot.channels.cache.get(idChMsg);
+    //Формирование 
+    let NewUserServer = new Discord.MessageEmbed()
+    .setTitle('**[Новый пользователь]**')
+    .setColor(0xFDFDFD)
+    .setDescription(`Пользователь ${member}\nНик: \`${member.displayName}\`\n\nтолько что зашёл на сервер`)
+    .setTimestamp()
+    .setFooter("Бот клана", "")
+    //Отправка сообщения
+    sysCh.send(NewUserServer);
+});
+
+//Сообщаем о пользователе, который покинул сервер
+bot.on('guildMemberRemove', member => {
+    console.log("Кто-то покинул сервер");
+    //Проверяем наличие канала, куда будем отправлять сообщение
+    let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
+    if(!logChannel) return;
+    //Канал для отправки сообщения
+    let sysCh = bot.channels.cache.get(idChMsg);
+    //Формирование
+    let OldUserServer = new Discord.MessageEmbed()
+    .setTitle('**[Покинул пользователь]**')
+    .setColor(0xFDFDFD)
+    .setDescription(`Пользователь ${member}\nНик: \`${member.displayName}\`\n\nпокинул наш сервер`)
+    .setTimestamp()
+    .setFooter("Бот клана", "")
+    //Отправка сообщения
+    sysCh.send(OldUserServer);
+});
+
+
+
+
+
+
+/* Проверка на изменение прав, ника, аватара */
+bot.on('guildMemberUpdate', function(oldMember, newMember) {
+
+    //declare changes
+    var Changes = {
+        unknown: 0,
+        addedRole: 1,
+        removedRole: 2,
+        username: 3,
+        nickname: 4,
+        avatar: 5
+    };
+    var change = Changes.unknown;
+
+    //check if username changed
+    if (newMember.user.username !== oldMember.user.username)
+        change = Changes.username;
+
+    //check if nickname changed
+    if (newMember.nickname !== oldMember.nickname)
+        change = Changes.nickname;
+
+    //check if avatar changed
+    if (newMember.user.displayAvatarURL() !== oldMember.user.displayAvatarURL())
+        change = Changes.avatar;
+
+    //log to console
+    switch (change) {
+        case Changes.unknown:
+            console.log('[' + newMember.guild.name + '][UPDUSR] ' + newMember.user.username + '#' + newMember.user.discriminator);
+            break;
+        case Changes.username:
+            console.log('[' + newMember.guild.name + '][UPDUSRNM] ' + oldMember.user.username + '#' + oldMember.user.discriminator +
+                ' is now ' + newMember.user.username + '#' + newMember.user.discriminator);
+            break;
+        case Changes.nickname:
+            console.log('[' + newMember.guild.name + '][UPDUSRNK] ' + newMember.user.username + '#' + newMember.user.discriminator +
+                (oldMember.nickname != null ? ' (' + oldMember.nickname + ')' : '') +
+                (newMember.nickname != null ? ' is now ' + newMember.nickname : ' no longer has a nickname.'));
+            break;
+        case Changes.avatar:
+            console.log('[' + newMember.guild.name + '][UPDAVT] ' + newMember.user.username + '#' + newMember.user.discriminator);
+            break;
+    }
+
+    //post in the guild's log channel
+    var log = newMember.guild.channels.cache.find(ch => ch.id === idChMsg);
+    if (log) {
+        switch (change) {
+            case Changes.unknown:
+                log.send('**[User Update]** ' + newMember);
+                break;
+
+
+            case Changes.username:
+                log.send('**[User Username Changed]** ' + newMember + ': Username changed from ' +
+                    oldMember.user.username + '#' + oldMember.user.discriminator + ' to ' +
+                    newMember.user.username + '#' + newMember.user.discriminator);
+                break;
+            case Changes.nickname:
+                log.send('**[User Nickname Changed]** ' + newMember + ': ' +
+                    (oldMember.nickname != null ? 'Changed nickname from ' + oldMember.nickname +
+                        +newMember.nickname : 'Set nickname') + ' to ' +
+                    (newMember.nickname != null ? newMember.nickname + '.' : 'original username.'));
+                break;
+            case Changes.avatar:
+                log.send('**[User Avatar Changed]** ' + newMember);
+                break;
+        }
+    }
+
+});
+
+
+/*
+bot.on('guildMemberUpdate', (oldMember, newMember) => {
+
+    const oldRoles = oldMember.roles;
+    const newRoles = newMember.roles;
+
+    // Check roles and execute your code.
+    console.log(`Old ${oldRoles} New ${newRoles}`);
+});
+*/
 
 //Токен
 bot.login(token);
