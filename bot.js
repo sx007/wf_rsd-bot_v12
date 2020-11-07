@@ -99,6 +99,84 @@ else if (command === "lol") {
     //message.reply(`Последний аргумент: ${lastArg} и ${args}!`);
 }
 
+/* Удаление сообщений */
+else if (command === "удалить") {
+    //Проверяем куда была отправленна данная команда
+    if (privateMsg() == false){
+        //публично
+        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
+            //И есть права необходимые
+            //console.log(`Количество агрументов ` + numArg);
+            if(numArg >= 3){
+                message.channel.send(`:exclamation: Ты указал много аргументов.\nИспользуй команду: \`${prefix}удалить (количество сообщений)\``);
+            } else {
+                let msg;
+                //Считаем сколько удалять сообщений
+                if(numArg === 1) {
+                    //Если указали только название команды
+                    msg = 2;
+                    //Удаляем одно сообщение
+                    message.channel.bulkDelete(msg);
+                } else {
+                    //Берём количество из аргумента +1 (самой команды)
+                    //Проверяем аргумент количества - число или нет
+                    if (isNaN(parseInt(args[0]))) {
+                        //console.log('Агрумент не число');
+                        message.channel.send(`:exclamation: Количество удаляемых сообщений указываем **числом**.\nИспользуй: \`${prefix}удалить (количество сообщений)\``);
+                    } else {
+                        //console.log('Аргумент число');
+                        if (parseInt(args[0]) < 0){
+                            message.channel.send(`:exclamation: Количество удаляемых сообщений не должно быть отрицательным.`);
+                        } else {
+                            //Если количество сообщений положительное число
+                            msg = parseInt(args[0]) + 1;
+                            //Проверяем на лимит
+                            if (parseInt(args[0]) >= 98){
+                                message.channel.send(`:exclamation: Количество одновременно удаляемых сообщений должно быть меньше **98**.`);
+                            } else {
+                                //удаляем N количество сообщений
+                                message.channel.bulkDelete(msg);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            //Если нет таких прав
+            message.reply(`\n:no_entry_sign: Недостаточно прав для данной команды!`);
+        }
+    } else {
+        //лично
+        message.reply(`:no_entry_sign: Данная команда здесь недоступна!`);
+    }
+}
+
+/*
+
+if(commandIS("удалить", message)) {
+    if(hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
+        if(args.length >= 3){
+            message.channel.send('Ты указал много аргументов. Используй: `!удалить (количество сообщений)`');
+        } else {
+            var msg;
+            if(args.length === 1) {
+                msg=2;
+            } else {
+                msg=parseInt(args[1]) + 1;
+            }
+            message.channel.fetchMessages({limit: msg}).then(messages => message.channel.bulkDelete(messages)).catch(console.error);
+        }
+    } else {
+        message.channel.send('Ты не `Администратор` или `Модератор`');
+    }
+}
+*/
+
+
+
+
+
+
 });
 
 /* Проверяем изменения голосовых каналов */
@@ -360,6 +438,20 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
     }
 
 });
+
+/*
+//Заготовка для проверки нахождения на севере
+let guild = client.guilds.get('guild ID here'),
+USER_ID = '123123123';
+if (guild.member(USER_ID)) {
+    // there is a GuildMember with that ID
+}
+*/
+
+/*
+//Заготовка для получения кода заголовка
+response.setHeader("Content-Type", "text/html");
+*/
 
 //Токен
 bot.login(token);
