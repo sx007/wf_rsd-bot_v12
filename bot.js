@@ -2,9 +2,10 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 //получаем токен, префикс, id канала
-let token = process.env.BOT_TOKEN; 
-let prefix = process.env.PREFIX;
-let idChMsg = process.env.ID_CHANNEL_SEND;
+const token = process.env.BOT_TOKEN; 
+const prefix = process.env.PREFIX;
+const idChMsg = process.env.ID_CHANNEL_SEND;
+const idSrv = process.env.ID_SERVER;
 
 /* Вывод сообщения о работе и готовности бота */
 bot.on('ready', () => { 
@@ -36,6 +37,22 @@ function hasRole(mem, r){
         return true;
     }
     else {
+        return false;
+    }
+}
+
+//Проверка наличия пользователя на сервере
+function existInSrv(){
+    //указываем на каком сервере искать
+    let guild = bot.guilds.cache.get(idSrv);
+    //Получаем ID пользователя отправившего сообщение
+    let userID = message.author.id;
+    //Если есть на указанном сервере
+    if (guild.member(userID)) {
+        //console.log('Есть пользователь на сервере');
+        return true;
+    } else {
+        //console.log('Нет пользователя на сервере');
         return false;
     }
 }
@@ -74,6 +91,7 @@ if (command === "ping") {
         if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
             //И есть права необходимые
             message.reply(`У тебя есть права`);
+            message.reply(`Pong! Время генерации сообщения ${timeTaken}ms.`);
         } else {
             //Если нет таких прав
             message.reply(`У тебя нет прав`);
@@ -81,14 +99,11 @@ if (command === "ping") {
     } else {
         //Если личное сообщение
         message.reply(`Личное сообщение`);
-    }    
-    //message.reply(`Pong! Время генерации сообщения ${timeTaken}ms.`);
+    }
 }
 
 else if (command === "sum") {
     message.reply(`Количество аргуметов: ${numArg}!`);
-    //const channel = bot.channels.cache.get('353436958724456448');
-    //sysCh.send('Проверка');
 }
 
 else if (command === "lol") {
@@ -150,30 +165,6 @@ else if (command === "удалить") {
         message.reply(`:no_entry_sign: Данная команда здесь недоступна!`);
     }
 }
-
-/*
-
-if(commandIS("удалить", message)) {
-    if(hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
-        if(args.length >= 3){
-            message.channel.send('Ты указал много аргументов. Используй: `!удалить (количество сообщений)`');
-        } else {
-            var msg;
-            if(args.length === 1) {
-                msg=2;
-            } else {
-                msg=parseInt(args[1]) + 1;
-            }
-            message.channel.fetchMessages({limit: msg}).then(messages => message.channel.bulkDelete(messages)).catch(console.error);
-        }
-    } else {
-        message.channel.send('Ты не `Администратор` или `Модератор`');
-    }
-}
-*/
-
-
-
 
 
 
@@ -372,8 +363,8 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
         switch (change) {
             //Неизвестное изменение
             case Changes.unknown:
-                info = `Пользователь <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\nобновил информацию.`;
-                sysCh.send(EmbedMsg('**[ИЗМЕНИЛАСЬ ИНФОРМАЦИЯ]**', 0x9013FE, info));
+                //info = `Пользователь <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\nобновил информацию.`;
+                //sysCh.send(EmbedMsg('**[ИЗМЕНИЛАСЬ ИНФОРМАЦИЯ]**', 0x9013FE, info));
                 break;
             //Смена ника пользователя
             case Changes.username:
@@ -438,15 +429,6 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
     }
 
 });
-
-/*
-//Заготовка для проверки нахождения на севере
-let guild = client.guilds.get('guild ID here'),
-USER_ID = '123123123';
-if (guild.member(USER_ID)) {
-    // there is a GuildMember with that ID
-}
-*/
 
 /*
 //Заготовка для получения кода заголовка
