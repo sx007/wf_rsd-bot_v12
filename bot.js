@@ -199,6 +199,8 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         .setTimestamp()
         return embed;
     }
+    //id AFK канала сервера
+    const afkSrv = bot.guilds.cache.map(guild => guild.afkChannelID).join("\n");
 
     //Пользователь подключился к голосовому каналу
     if(!oldState.channel && newState.channel) {
@@ -221,12 +223,12 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
     //Пользователь включил микрофон
-    if(oldState.selfMute === true && newState.selfMute === false) {
+    if(oldState.selfMute === true && newState.selfMute === false && oldState.channel.id !== afkSrv) {
         let info = `:microphone: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключил микрофон.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
     //Пользователь отключил звук
-    if(oldState.selfDeaf === false && newState.selfDeaf === true){
+    if(oldState.selfDeaf === false && newState.selfDeaf === true && newState.channel.id !== afkSrv){
         let info = `:mute: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nотключил звук.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
