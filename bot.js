@@ -167,6 +167,110 @@ else if (command === "удалить") {
 }
 
 
+/* Удаление сообщений */
+else if (command === "кик") {
+    //Название сервера
+    const nameSrv = bot.guilds.cache.map(guild => guild.name).join("\n");
+    //Проверяем куда была отправленна данная команда
+    if (privateMsg() == false){
+        //публично
+        let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+        let reason = args.slice(1).join(' ');
+        //console.log(user);
+        //console.log(reason);
+        //Если автор сообщения - Бот
+        if (message.author.bot){
+            console.log("Автор бот");
+            return;
+        };
+        //Пользователь не найден
+        if (!user){
+            //return message.channel.send("member not found");
+            console.log("Пользователь не найден!");
+            return;
+        }
+        //Не указана причина кика
+        if (!reason){
+            reason = "Не указана причина кика";
+            console.log("Не указана причина кика");
+        }
+        //Проверяем права на доступ к данной команде
+        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
+            //return message.channel.send("У вас есть права кикнуть");
+            console.log("У вас есть права кикнуть");
+        }
+        //Проверяем Администратор или Модератор 
+        if (hasRole(user, "Администратор") || hasRole(user, "Модераторы")){
+            //return message.channel.send("У вас есть права кикнуть");
+            console.log("Нельзя кикнуть пользователя с правами Администратор или Модераторы");
+            return;
+        }
+        //Попытка самого себя кикнуть
+        if (user.id == message.author.id){
+            //return message.channel.send("Ты не можешь кикнуть себя!");
+            console.log("Ты не можешь кикнуть себя!");
+            return;
+        }
+        //Попытка кикнуть бота
+        if (user.user.bot){
+            //return message.channel.send("Ты не можешь кикнуть бота!");
+            console.log("Ты не можешь кикнуть бота!");
+            return;
+        }
+        //
+        //message.mentions.users(user).kick();
+        //Доделать надо
+        user.send("Тебя кикнули с сервера **" + nameSrv + "**\nПричина: " + reason);
+        message.channel.send(`${message.author} Кикнул ${user}#${user.user.discriminator}`);
+        //
+        /*
+        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
+            //И есть права необходимые
+            //console.log(`Количество агрументов ` + numArg);
+            if(numArg >= 3){
+                //message.channel.send(`:exclamation: Ты указал много аргументов.\nИспользуй команду: \`${prefix}удалить (количество сообщений)\``);
+            } else {
+                let msg;
+                //Считаем сколько удалять сообщений
+                if(numArg === 1) {
+                    //Если указали только название команды
+                    msg = 2;
+                    //Удаляем одно сообщение
+                    message.channel.bulkDelete(msg);
+                } else {
+                    //Берём количество из аргумента +1 (самой команды)
+                    //Проверяем аргумент количества - число или нет
+                    if (isNaN(parseInt(args[0]))) {
+                        //console.log('Агрумент не число');
+                        message.channel.send(`:exclamation: Количество удаляемых сообщений указываем **числом**.\nИспользуй: \`${prefix}удалить (количество сообщений)\``);
+                    } else {
+                        //console.log('Аргумент число');
+                        if (parseInt(args[0]) < 0){
+                            message.channel.send(`:exclamation: Количество удаляемых сообщений не должно быть отрицательным.`);
+                        } else {
+                            //Если количество сообщений положительное число
+                            msg = parseInt(args[0]) + 1;
+                            //Проверяем на лимит
+                            if (parseInt(args[0]) >= 98){
+                                message.channel.send(`:exclamation: Количество одновременно удаляемых сообщений должно быть меньше **98**.`);
+                            } else {
+                                //удаляем N количество сообщений
+                                message.channel.bulkDelete(msg);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            //Если нет таких прав
+            message.reply(`\n:no_entry_sign: Недостаточно прав для данной команды!`);
+        }
+        */
+    } else {
+        //лично
+        message.reply(`:no_entry_sign: Данная команда здесь недоступна!`);
+    }
+}
 
 });
 
@@ -372,7 +476,7 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
             //Неизвестное изменение
             case Changes.unknown:
                 //info = `Пользователь <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\nобновил информацию.`;
-                //sysCh.send(EmbedMsg('**[ИЗМЕНИЛАСЬ ИНФОРМАЦИЯ]**', 0x9013FE, info));
+                //sysCh.send(EmbedMsg('**[ИЗМЕНИЛАСЬ ИНФОРМАЦИЯ]**', 0x50E3C2, info));
                 break;
             //Смена ника пользователя
             case Changes.username:
