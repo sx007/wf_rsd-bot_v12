@@ -218,9 +218,15 @@ else if (command === "кик") {
             return;
         }
         //
+        //
+        //message.delete({ timeout: 5000, reason: 'It had to be done.' });
+        //удалить через 15сек
+        //message.reply("I guess they never miss, huh?").then(message => message.delete(15000)).catch(console.error);
+        //
+        //
         //message.mentions.users(user).kick();
         //Доделать надо
-        user.send("Тебя кикнули с сервера **" + nameSrv + "**\nПричина: " + reason);
+        user.send(">>> Тебя кикнули с сервера **" + nameSrv + "**\nПричина: " + reason);
         message.channel.send(`${message.author} Кикнул ${user}#${user.user.discriminator}`);
         //
         /*
