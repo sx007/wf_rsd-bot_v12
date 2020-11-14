@@ -458,7 +458,6 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
         removedRole: 2,
         username: 3,
         nickname: 4,
-        avatar: 5
     };
     var change = Changes.unknown;
 
@@ -479,9 +478,6 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
     //Если изменился серверный ник пользователя
     if (newMember.nickname !== oldMember.nickname)
         change = Changes.nickname;
-    //Если сменился аватар
-    if (newMember.user.displayAvatarURL() !== oldMember.user.displayAvatarURL())
-        change = Changes.avatar;
     //Если добавили роль
     var addedRole = '';
     if (oldMember.roles.cache.size < newMember.roles.cache.size) {
@@ -544,11 +540,6 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                     //Отправляем сообщение
                     sysCh.send(EmbedMsg(':repeat: **[ИЗМЕНЕН СЕРВЕРНЫЙ НИК]**', 0x50E3C2, info));
                 })
-                break;
-            //Смена аватара
-            case Changes.avatar:
-                info = `Пользователь <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\nизменил свой аватар.`;
-                sysCh.send(EmbedMsg('**[ИЗМЕНИЛАСЬ АВАТАРКА]**', 0x50E3C2, info));
                 break;
             //Добавление прав/роли
             case Changes.addedRole:
