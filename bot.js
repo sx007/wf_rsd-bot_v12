@@ -165,7 +165,7 @@ else if (command === "удалить") {
     }
 }
 
-/* Удаление сообщений */
+/* Выгнать пользователя с сервера */
 else if (command === "кик") {
     //Название сервера
     const nameSrv = bot.guilds.cache.map(guild => guild.name).join("\n");
@@ -179,8 +179,7 @@ else if (command === "кик") {
             return;
         };
         //Проверяем права на доступ к данной команде
-        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
-            //console.log("У вас есть права кикнуть");
+        if (message.member.hasPermission("KICK_MEMBERS")){
             if(numArg === 1) {
                 //Если указали только название команды
                 message.reply(`:exclamation: Неверно указана команда.\nИспользуй: \`${prefix}кик @Ник Причина_кика\``).then(m => m.delete({timeout: 20000, reason: 'Самоудаляемое сообщение'}));
@@ -188,37 +187,32 @@ else if (command === "кик") {
             }
             //Пользователь не найден
             if (!user){
-                //console.log("Пользователь не найден!");
                 message.reply(`\n:no_pedestrians: Указанный пользователь не найден!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
                 return;
             }
             //Попытка самого себя кикнуть
             if (user.id == message.author.id){
-                //console.log("Ты не можешь кикнуть себя!");
                 message.reply(`\n:no_entry_sign: Ты не можешь кикнуть себя!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
                 return;
             }
             //Проверяем Администратор или Модератор 
             if (hasRole(user, "Администратор") || hasRole(user, "Модераторы")){
-                //console.log("Нельзя кикнуть пользователя с правами Администратор или Модераторы");
                 message.reply(`\n:no_entry_sign: Нельзя кикнуть пользователя с правами **Администратор** или **Модераторы**!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
                 return;
             }
             //Попытка кикнуть бота
             if (user.user.bot){
-                //console.log("Ты не можешь кикнуть бота!");
                 message.reply(`\n:robot: Чем тебе бот помешал, мешок с костями? Ты не можешь кикнуть бота!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
                 return;
             }
             //Не указана причина кика
             if (!reas){
-                //console.log("Не указана причина кика");
                 reas = "Увы, не указана причина кика";
             }
+            //Отправляем пользователю, которого кикнули, сообщение
+            user.send(">>> Тебя кикнули с сервера **" + nameSrv + "**\nПричина: " + reas);
             //Кикаем пользователя с сервера
             user.kick(reas);
-            //Отправляем пользователю, которого кикнули сообщение
-            user.send(">>> Тебя кикнули с сервера **" + nameSrv + "**\nПричина: " + reas);
             //Проверяем наличие канала, куда будем отправлять сообщение
             let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
             if(!logChannel) return;
@@ -233,6 +227,78 @@ else if (command === "кик") {
             .setFooter("Бот клана", "")
             //Отправка сообщения
             sysCh.send(KickUser);
+        } else {
+            //Если нет таких прав
+            message.reply(`\n:no_entry_sign: Недостаточно прав для данной команды!`).then(m => m.delete({timeout: 20000, reason: 'Самоудаляемое сообщение'}));
+        }
+    } else {
+        //лично
+        message.reply(`:no_entry_sign: Данная команда здесь недоступна!`);
+    }
+}
+
+/* Забанить пользователя на сервере */
+else if (command === "бан") {
+    //Название сервера
+    const nameSrv = bot.guilds.cache.map(guild => guild.name).join("\n");
+    //Проверяем куда была отправленна данная команда
+    if (privateMsg() == false){
+        //публично
+        let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+        let reas = args.slice(1).join(' ');
+        //Если автор сообщения - Бот
+        if (message.author.bot){
+            return;
+        };
+        //Проверяем права на доступ к данной команде
+        if (message.member.hasPermission("BAN_MEMBERS")){
+            if(numArg === 1) {
+                //Если указали только название команды
+                message.reply(`:exclamation: Неверно указана команда.\nИспользуй: \`${prefix}бан @Ник Причина_бана\``).then(m => m.delete({timeout: 20000, reason: 'Самоудаляемое сообщение'}));
+                return;
+            }
+            //Пользователь не найден
+            if (!user){
+                message.reply(`\n:no_pedestrians: Указанный пользователь не найден!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
+                return;
+            }
+            //Попытка самого себя забанить
+            if (user.id == message.author.id){
+                message.reply(`\n:no_entry_sign: Ты не можешь забанить себя!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
+                return;
+            }
+            //Проверяем Администратор или Модератор 
+            if (hasRole(user, "Администратор") || hasRole(user, "Модераторы")){
+                message.reply(`\n:no_entry_sign: Нельзя забанить пользователя с правами **Администратор** или **Модераторы**!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
+                return;
+            }
+            //Попытка забанить бота
+            if (user.user.bot){
+                message.reply(`\n:robot: Чем тебе бот помешал, мешок с костями? Ты не можешь забанить бота!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
+                return;
+            }
+            //Не указана причина бана
+            if (!reas){
+                reas = "Увы, не указана причина бана";
+            }
+            //Отправляем пользователю, которого забанили, сообщение
+            user.send(">>> Тебя забанили на сервере **" + nameSrv + "**\nПричина: " + reas);
+            //Баним пользователя на сервере
+            user.ban({ reason: reas });
+            //Проверяем наличие канала, куда будем отправлять сообщение
+            let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
+            if(!logChannel) return;
+            //Канал для отправки сообщения
+            let sysCh = bot.channels.cache.get(idChMsg);
+            //Формирование 
+            let BanUser = new Discord.MessageEmbed()
+            .setTitle(':no_pedestrians: **[ЗАБАНИЛИ ПОЛЬЗОВАТЕЛЯ]**')
+            .setColor(0xFF3700)
+            .setDescription(`Пользователя ${user}\nНик: \`${user.displayName}\`\nTag: \`${user.user.username}#${user.user.discriminator}\`\n\nКто забанил:\n${message.author}`)
+            .setTimestamp()
+            .setFooter("Бот клана", "")
+            //Отправка сообщения
+            sysCh.send(BanUser);
         } else {
             //Если нет таких прав
             message.reply(`\n:no_entry_sign: Недостаточно прав для данной команды!`).then(m => m.delete({timeout: 20000, reason: 'Самоудаляемое сообщение'}));
@@ -490,8 +556,12 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                 newMember.guild.fetchAuditLogs().then(logs => {
                     //Получения id пользователя, который выполнил непосредственно
                     var userID = logs.entries.first().executor.id;
+                    let nickuser = newMember.nickname;
+                    if (nickuser == null) {
+                        nickuser = 'По умолчанию';
+                    }
                     //формируем сообщение
-                    info = `**Кому добавили:**<@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Роль:**\n __${addedRole}__\n\nКто добавил:\n<@${userID}>`;
+                    info = `**Кому добавили:**<@${newMember.id}>\nНик: \`${nickuser}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Роль:**\n __${addedRole}__\n\nКто добавил:\n<@${userID}>`;
                     //Отправляем сообщение
                     sysCh.send(EmbedMsg(':warning: **[ДОБАВЛЕНА РОЛЬ]**', 0x50E3C2, info));
                 })
@@ -502,8 +572,12 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                 newMember.guild.fetchAuditLogs().then(logs => {
                     //Получения id пользователя, который выполнил непосредственно
                     var userID = logs.entries.first().executor.id;
+                    let nickuser = newMember.nickname;
+                    if (nickuser == null) {
+                        nickuser = 'По умолчанию';
+                    }
                     //формируем сообщение
-                    info = `**Кому удалили:**<@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Роль:**\n __${removedRole}__\n\nКто удалил:\n<@${userID}>`;
+                    info = `**Кому удалили:**<@${newMember.id}>\nНик: \`${nickuser}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Роль:**\n __${removedRole}__\n\nКто удалил:\n<@${userID}>`;
                     //Отправляем сообщение
                     sysCh.send(EmbedMsg(':warning: **[УДАЛЕНА РОЛЬ]**', 0x50E3C2, info));
                 })
