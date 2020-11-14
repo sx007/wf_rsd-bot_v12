@@ -176,47 +176,56 @@ else if (command === "кик") {
         //публично
         let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         let reason = args.slice(1).join(' ');
-        //console.log(user);
-        //console.log(reason);
+
         //Если автор сообщения - Бот
         if (message.author.bot){
-            console.log("Автор бот");
+            //console.log("Автор бот");
             return;
         };
-        //Пользователь не найден
-        if (!user){
-            //return message.channel.send("member not found");
-            console.log("Пользователь не найден!");
-            return;
-        }
-        //Не указана причина кика
-        if (!reason){
-            reason = "Не указана причина кика";
-            console.log("Не указана причина кика");
-        }
         //Проверяем права на доступ к данной команде
         if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
-            //return message.channel.send("У вас есть права кикнуть");
-            console.log("У вас есть права кикнуть");
+            //console.log("У вас есть права кикнуть");
+            //Пользователь не найден
+            if (!user){
+                //console.log("Пользователь не найден!");
+                message.reply(`\n:no_pedestrians: Указанный пользователь не найден!`);
+                return;
+            }
+            //Проверяем Администратор или Модератор 
+            if (hasRole(user, "Администратор") || hasRole(user, "Модераторы")){
+                //console.log("Нельзя кикнуть пользователя с правами Администратор или Модераторы");
+                message.reply(`\n:no_entry_sign: Нельзя кикнуть пользователя с правами **Администратор** или **Модераторы**!`);
+                return;
+            }
+            //Попытка кикнуть бота
+            if (user.user.bot){
+                //console.log("Ты не можешь кикнуть бота!");
+                message.reply(`\n:robot: Чем тебе бот помешал? Ты не можешь кикнуть бота!`);
+                return;
+            }
+            //Попытка самого себя кикнуть
+            if (user.id == message.author.id){
+                console.log("Ты не можешь кикнуть себя!");
+                //message.reply(`\n:no_entry_sign: Ты не можешь кикнуть себя!`);
+                message.reply("\n:no_entry_sign: Ты не можешь кикнуть себя!").then(message => message.delete(15000)).catch(console.error);
+                return;
+            }
+            //Не указана причина кика
+            if (!reason){
+                //console.log("Не указана причина кика");
+                reason = "Не указана причина кика";
+            }
+        } else {
+            //Если нет таких прав
+            message.reply(`\n:no_entry_sign: Недостаточно прав для данной команды!`);
         }
-        //Проверяем Администратор или Модератор 
-        if (hasRole(user, "Администратор") || hasRole(user, "Модераторы")){
-            //return message.channel.send("У вас есть права кикнуть");
-            console.log("Нельзя кикнуть пользователя с правами Администратор или Модераторы");
-            return;
-        }
-        //Попытка самого себя кикнуть
-        if (user.id == message.author.id){
-            //return message.channel.send("Ты не можешь кикнуть себя!");
-            console.log("Ты не можешь кикнуть себя!");
-            return;
-        }
-        //Попытка кикнуть бота
-        if (user.user.bot){
-            //return message.channel.send("Ты не можешь кикнуть бота!");
-            console.log("Ты не можешь кикнуть бота!");
-            return;
-        }
+
+        
+        
+        
+        
+        
+        
         //
         //
         //message.delete({ timeout: 5000, reason: 'It had to be done.' });
