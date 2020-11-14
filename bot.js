@@ -121,7 +121,6 @@ else if (command === "удалить") {
         //публично
         if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
             //И есть права необходимые
-            //console.log(`Количество агрументов ` + numArg);
             if(numArg >= 3){
                 message.channel.send(`:exclamation: Ты указал много аргументов.\nИспользуй команду: \`${prefix}удалить (количество сообщений)\``);
             } else {
@@ -166,7 +165,6 @@ else if (command === "удалить") {
     }
 }
 
-
 /* Удаление сообщений */
 else if (command === "кик") {
     //Название сервера
@@ -175,112 +173,70 @@ else if (command === "кик") {
     if (privateMsg() == false){
         //публично
         let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        let reason = args.slice(1).join(' ');
-
+        let reas = args.slice(1).join(' ');
         //Если автор сообщения - Бот
         if (message.author.bot){
-            //console.log("Автор бот");
             return;
         };
         //Проверяем права на доступ к данной команде
         if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
             //console.log("У вас есть права кикнуть");
+            if(numArg === 1) {
+                //Если указали только название команды
+                message.reply(`:exclamation: Неверно указана команда.\nИспользуй: \`${prefix}кик @Ник Причина_кика\``).then(m => m.delete({timeout: 20000, reason: 'Самоудаляемое сообщение'}));
+                return;
+            }
             //Пользователь не найден
             if (!user){
                 //console.log("Пользователь не найден!");
-                message.reply(`\n:no_pedestrians: Указанный пользователь не найден!`);
+                message.reply(`\n:no_pedestrians: Указанный пользователь не найден!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
+                return;
+            }
+            //Попытка самого себя кикнуть
+            if (user.id == message.author.id){
+                //console.log("Ты не можешь кикнуть себя!");
+                message.reply(`\n:no_entry_sign: Ты не можешь кикнуть себя!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
                 return;
             }
             //Проверяем Администратор или Модератор 
             if (hasRole(user, "Администратор") || hasRole(user, "Модераторы")){
                 //console.log("Нельзя кикнуть пользователя с правами Администратор или Модераторы");
-                message.reply(`\n:no_entry_sign: Нельзя кикнуть пользователя с правами **Администратор** или **Модераторы**!`);
+                message.reply(`\n:no_entry_sign: Нельзя кикнуть пользователя с правами **Администратор** или **Модераторы**!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
                 return;
             }
             //Попытка кикнуть бота
             if (user.user.bot){
                 //console.log("Ты не можешь кикнуть бота!");
-                message.reply(`\n:robot: Чем тебе бот помешал? Ты не можешь кикнуть бота!`);
-                return;
-            }
-            //Попытка самого себя кикнуть
-            if (user.id == message.author.id){
-                console.log("Ты не можешь кикнуть себя!");
-                //message.reply(`\n:no_entry_sign: Ты не можешь кикнуть себя!`);
-                message.reply("\n:no_entry_sign: Ты не можешь кикнуть себя!").then(message => message.delete(15000)).catch(console.error);
+                message.reply(`\n:robot: Чем тебе бот помешал, мешок с костями? Ты не можешь кикнуть бота!`).then(m => m.delete({timeout: 15000, reason: 'Самоудаляемое сообщение'}));
                 return;
             }
             //Не указана причина кика
-            if (!reason){
+            if (!reas){
                 //console.log("Не указана причина кика");
-                reason = "Не указана причина кика";
+                reas = "Увы, не указана причина кика";
             }
+            //Кикаем пользователя с сервера
+            user.kick(reas);
+            //Отправляем пользователю, которого кикнули сообщение
+            user.send(">>> Тебя кикнули с сервера **" + nameSrv + "**\nПричина: " + reas);
+            //Проверяем наличие канала, куда будем отправлять сообщение
+            let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
+            if(!logChannel) return;
+            //Канал для отправки сообщения
+            let sysCh = bot.channels.cache.get(idChMsg);
+            //Формирование 
+            let KickUser = new Discord.MessageEmbed()
+            .setTitle(':no_pedestrians: **[КИКНУЛИ ПОЛЬЗОВАТЕЛЯ]**')
+            .setColor(0xFF3700)
+            .setDescription(`Пользователя ${user}\nНик: \`${user.displayName}\`\nTag: \`${user.user.username}#${user.user.discriminator}\`\n\nКто кикнул:\n${message.author}`)
+            .setTimestamp()
+            .setFooter("Бот клана", "")
+            //Отправка сообщения
+            sysCh.send(KickUser);
         } else {
             //Если нет таких прав
-            message.reply(`\n:no_entry_sign: Недостаточно прав для данной команды!`);
+            message.reply(`\n:no_entry_sign: Недостаточно прав для данной команды!`).then(m => m.delete({timeout: 20000, reason: 'Самоудаляемое сообщение'}));
         }
-
-        
-        
-        
-        
-        
-        
-        //
-        //
-        //message.delete({ timeout: 5000, reason: 'It had to be done.' });
-        //удалить через 15сек
-        //message.reply("I guess they never miss, huh?").then(message => message.delete(15000)).catch(console.error);
-        //
-        //
-        //message.mentions.users(user).kick();
-        //Доделать надо
-        user.send(">>> Тебя кикнули с сервера **" + nameSrv + "**\nПричина: " + reason);
-        message.channel.send(`${message.author} Кикнул ${user}#${user.user.discriminator}`);
-        //
-        /*
-        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
-            //И есть права необходимые
-            //console.log(`Количество агрументов ` + numArg);
-            if(numArg >= 3){
-                //message.channel.send(`:exclamation: Ты указал много аргументов.\nИспользуй команду: \`${prefix}удалить (количество сообщений)\``);
-            } else {
-                let msg;
-                //Считаем сколько удалять сообщений
-                if(numArg === 1) {
-                    //Если указали только название команды
-                    msg = 2;
-                    //Удаляем одно сообщение
-                    message.channel.bulkDelete(msg);
-                } else {
-                    //Берём количество из аргумента +1 (самой команды)
-                    //Проверяем аргумент количества - число или нет
-                    if (isNaN(parseInt(args[0]))) {
-                        //console.log('Агрумент не число');
-                        message.channel.send(`:exclamation: Количество удаляемых сообщений указываем **числом**.\nИспользуй: \`${prefix}удалить (количество сообщений)\``);
-                    } else {
-                        //console.log('Аргумент число');
-                        if (parseInt(args[0]) < 0){
-                            message.channel.send(`:exclamation: Количество удаляемых сообщений не должно быть отрицательным.`);
-                        } else {
-                            //Если количество сообщений положительное число
-                            msg = parseInt(args[0]) + 1;
-                            //Проверяем на лимит
-                            if (parseInt(args[0]) >= 98){
-                                message.channel.send(`:exclamation: Количество одновременно удаляемых сообщений должно быть меньше **98**.`);
-                            } else {
-                                //удаляем N количество сообщений
-                                message.channel.bulkDelete(msg);
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            //Если нет таких прав
-            message.reply(`\n:no_entry_sign: Недостаточно прав для данной команды!`);
-        }
-        */
     } else {
         //лично
         message.reply(`:no_entry_sign: Данная команда здесь недоступна!`);
