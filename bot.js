@@ -338,63 +338,27 @@ else if (command === "wf") {
         }
         return false;
     }
-    //Функция получения кода ответа сервера
+
+    //парсинг данных с API
+    function parseApi(str) {
+        //Проверяем полученное содержимое на JSON
+        if (IsJsonString(str) == true) {
+            //Если это JSON
+            console.log("JSON");
+        } else {
+            //Если это не JSON
+            console.log("не JSON");
+        }
+    }
     /*
-    function getCodeUser(name, srv){
-        let link = "http://api.warface.ru/user/stat/?name=" + name + "&server=" + srv;
-        let urlEnc = encodeURI(link);
-        //var code;
-        var options = {url: urlEnc, json: true, headers: {'User-Agent': 'request'}};
-        request.get(options, function(err, res, data) {
-            //Если ошибка
-            if (err) {
-                console.log('Error: ', err);
-                //code = 0;
-                return 0;
-            }
-            //Если статус запроса 200
-            if (res.statusCode == 200) {
-                console.log('Status 200:', res.statusCode);
-                //code = 1;
-                return 1;
-            } else {
-                //Неверный запрос
-                if (res.statusCode == 400) {
-                    console.log('Status 400:', res.statusCode);
-                    console.log('Data.message 400:', data.message);
-                    if (data.message == "Пользователь не найден"){
-                        //code = 2;
-                        return 2;
-                    }
-                    if (data.message == "Игрок скрыл свою статистику"){
-                        //code = 3;
-                        return 3;
-                    }
-                    if (data.message == "Персонаж неактивен"){
-                        //code = 4;
-                        return 4;
-                    }
-                }
-                //Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
-                if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
-                    console.log('Status 403+404+500:', res.statusCode);
-                    //code = 5;
-                    return 5;
-                }
-            }
-        });
-        //console.log(code);
-        //return code;
-    }
+    var data = JSON.parse(resp);
+    if(typeof data.age === 'undefined')
+    alert('Поля "age" нет');
+    else
+    alert('Поле "age" в наличии, значение: ' + data.age);
     */
-/*
-    function doCallback(callback, done){
-        var options = {url: 'http://www.google.com', headers: {'Content-Type': 'text/html'}, encoding: null};     
-        request.get(options, function(err, res, body){           
-            return callback(res, done); 
-        }); 
-    }
-*/
+
+
     //Номер сервера в название
     function numSrvToStr(num){
         if (num == 1){
@@ -431,9 +395,14 @@ else if (command === "wf") {
                     //console.log('Error: ', err);
                     message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                 }
+                console.log('statusCode:', res && res.statusCode);
                 //Если статус запроса 200
                 if (res.statusCode == 200) {
                     //Нашли на Альфа
+                    if (IsJsonString(data) == true) {
+                        console.log("norm");
+                    }
+                    parseApi(data);
                     message.reply(EmbedMsg(':bar_chart: Статистика по бойцу',0x02A5D0,`Боец найден на сервере **${nameSrv}**\n`));
                 } else {
                     //Неверный запрос
@@ -559,6 +528,26 @@ else if (command === "wf") {
             } else {
                 message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`**Неверно указан сервер.**\n\nДоступные варианты:\n\`Альфа Браво Чарли\``)).then(m => m.delete({timeout: 20000}));
                 return;
+            }
+            //Функция названия класса в игре
+            function classInGame(cl){
+                let gameClass;
+                if (cl == "Rifleman"){
+                    gameClass = "Штурмовик";
+                }
+                if (cl == "Engineer"){
+                    gameClass = "Инженер";
+                }
+                if (cl == "Medic"){
+                    gameClass = "Медик";
+                }
+                if (cl == "Recon"){
+                    gameClass = "Снайпер";
+                }
+                if (cl == "Heavy"){
+                    gameClass = "СЭД";
+                }
+                return gameClass;
             }
             //Начинаем проверку на указанном сервере
             //console.log(getCodeUser(uName, numSrv));
