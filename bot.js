@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 var request = require('request');
+var express = require('express');
 const bot = new Discord.Client();
 
 //получаем токен, префикс, id канала
@@ -109,28 +110,129 @@ else if (command === "sum") {
 
 
 else if (command === "0") {
-
-    
-    //message.reply(`Количество аргуметов: ${numArg}!`);
-    //let link = "http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&api_key=c1572082105bd40d247836b5c1819623&format=json&country=Netherlands";
     let link = "http://api.warface.ru/user/stat/?name=мельх1&server=1";
     let urlEnc = encodeURI(link);
-    var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'}, timeout: 10000};
-    request(options, function(err, res, data) {
-        //Если нет ответа запроса
-        if(res) {
-            console.log("yes res");
-        } else {
-            console.log("no res");
+    var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+    //Лимит запросов
+    var maxRequests = 5;
+    //Запрос с лимитом
+    function requestWithTimeout(attempt){
+        request(options, function(error, response, body){
+            if (error) {
+                console.log(error);
+                //Если количество запросов достугнуто
+                if (attempt == maxRequests){
+                    console.log("Limit maxRequests");
+                    return;
+                } else {
+                    requestWithTimeout(attempt+1);
+                }
+            } else {
+                //Всё хорошо
+                console.log("Всё заебись!");
+                //Если есть ответ
+                if (response) {
+                    console.log("yes response");
+                    //Проверяем содержимое
+                    if (body) {
+                        console.log("yes body");
+                        console.log(body);
+                    } else {
+                        console.log("no body");
+                    }
+                } else {
+                    console.log("no response");
+                }
+            }
+        });
+    }
+    
+    requestWithTimeout(1);
+
+
+    /*
+    request(url, {
+    headers: { 
+        "User-Agent": "My app - Get res API"
         }
-        //Если ошибка
+    }, function (err, content, body) {
         if (err) {
-            console.log('Error: ', err);
+            console.log(err);
+            return false;
         }
+
+        //Parse the JSON
+        let res = JSON.parse(body)
+        //Your code.
+        console.log(res);
     });
+    */
+    /*
+    var app = express();
+    // listen for requests :)
+    var listener = app.listen(process.env.PORT, function () {
+    console.log('Your app is listening on port ' + listener.address().port);
+    });
+
+    var request = require('request');
+    request('http://www.google.com', function (error, response, body) {
+    console.log('error:', error); // Print the error if one occurred
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    console.log('body:', body); // Print the HTML for the Google homepage.
+    });
+    */
+    /*
+    const options = {
+        url: 'http://api.warface.ru/user/stat/?name=%D0%A8%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BD%D1%8B%D0%B9_%D0%93%D0%BB%D0%B0%D0%B7&server=1',
+        headers: {
+        'User-Agent': 'request'
+        }
+    };
+    
+    function callback(error, response, body) {
+        if (!error && response.statusCode == 200) {
+        const info = JSON.parse(body);
+        //console.log(info.stargazers_count + " Stars");
+        console.log(info);
+        }
+    }
+    
+    request(options, callback);
+*/
+
 }
 
-
+else if (command === "rs") {
+    //Получаем ID владельца сервера
+    const ownerSrvID = bot.guilds.cache.map(guild => guild.ownerID).join("\n");
+    //Функция перезапуска
+    function restart() {
+        return process.exit(1);
+    }
+    //Если сообщение публичное
+    if (privateMsg() == false){
+        //Проверяем автора - владелец ли сервера
+        if (message.member.id === ownerSrvID) {
+            //Если владелец, то перезапускаем бота
+            restart();
+            message.reply(`:robot: :repeat: **Бот перезапускается!**`).then(m => m.delete({timeout: 20000}));
+        } else {
+            //Если нет прав
+            message.reply(`:no_entry: **У вас нет прав для данной команды!**`).then(m => m.delete({timeout: 20000}));
+        }
+    } else {
+        //Если личное сообщение
+        //Проверяем автора - владелец ли сервера
+        if (message.author.id === ownerSrvID) {
+            //Если владелец, то перезапускаем бота
+            restart();
+            message.reply(`:robot: :repeat: **Бот перезапускается!**`);
+        } else {
+            //Если нет прав
+            message.reply(`:no_entry: **У вас нет прав для данной команды!**`);
+        }
+    }
+}
 
 else if (command === "lol") {
     const nArg = numArg-2;
@@ -720,6 +822,7 @@ else if (command === "wf") {
 
 /* Проверяем изменения голосовых каналов */
 bot.on("voiceStateUpdate", (oldState, newState) => {
+    //console.log(oldState);
     //Проверяем наличие канала, куда будем отправлять сообщение
     let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
     if(!logChannel) return;
