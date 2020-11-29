@@ -113,41 +113,32 @@ else if (command === "0") {
     let link = "http://api.warface.ru/user/stat/?name=мельх1&server=1";
     let urlEnc = encodeURI(link);
     var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
-    //Лимит запросов
-    var maxRequests = 5;
+
     //Запрос с лимитом
-    function requestWithTimeout(attempt){
-        request(options, function(error, response, body){
-            if (error) {
-                console.log(error);
-                //Если количество запросов достугнуто
-                if (attempt == maxRequests){
-                    console.log("Limit maxRequests");
-                    return;
+    request(options, function(error, response, body){
+        //Если возникла ошибка
+        if (error) {
+            console.log(error);
+            return;
+        } else {
+            //Всё хорошо
+            console.log("Всё заебись!");
+            //Если есть ответ
+            if (response) {
+                console.log("yes response");
+                console.log(response.statusCode);
+                //Проверяем содержимое
+                if (body) {
+                    console.log("yes body");
+                    console.log(body);
                 } else {
-                    requestWithTimeout(attempt+1);
+                    console.log("no body");
                 }
             } else {
-                //Всё хорошо
-                console.log("Всё заебись!");
-                //Если есть ответ
-                if (response) {
-                    console.log("yes response");
-                    //Проверяем содержимое
-                    if (body) {
-                        console.log("yes body");
-                        console.log(body);
-                    } else {
-                        console.log("no body");
-                    }
-                } else {
-                    console.log("no response");
-                }
+                console.log("no response");
             }
-        });
-    }
-    
-    requestWithTimeout(1);
+        }
+    });
 
 
     /*
@@ -202,6 +193,7 @@ else if (command === "0") {
 
 }
 
+/* Команда перезагрузки бота */
 else if (command === "rs") {
     //Получаем ID владельца сервера
     const ownerSrvID = bot.guilds.cache.map(guild => guild.ownerID).join("\n");
@@ -289,7 +281,7 @@ else if (command === "удалить") {
         }
     } else {
         //лично
-        message.reply(`:no_entry_sign: Данная команда здесь недоступна!`);
+        message.reply(`:no_entry_sign: **Данная команда здесь недоступна!**`);
     }
 }
 
