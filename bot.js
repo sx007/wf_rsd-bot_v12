@@ -815,6 +815,7 @@ else if (command === "wf") {
 /* Проверяем изменения голосовых каналов */
 bot.on("voiceStateUpdate", (oldState, newState) => {
     //console.log(oldState);
+    //console.log(newState);
     //Проверяем наличие канала, куда будем отправлять сообщение
     let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
     if(!logChannel) return;
@@ -823,8 +824,9 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
     let sysCh = bot.channels.cache.get(idChMsg);
     //информация о каналах и пользователе
     let oldChannel = oldState.channel;
-    let oldMember = oldState.member;
     let newChannel = newState.channel;
+    let oldMember = oldState.member;
+    let newMember = newState.member;
     let srvNick = '';
     //Проверяем серверный ник
     if(oldMember.nickname == null){
@@ -832,7 +834,6 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
     } else {
         srvNick = oldMember.nickname;
     }
-
     //Заготовка для Embed сообщения
     function EmbedMsg(color, Descr){
         let embed = new Discord.MessageEmbed()
@@ -900,7 +901,46 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         let info = `:red_circle: Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключил стрим.`;
         sysCh.send(EmbedMsg(0x8B572A, info));
     }
-
+    //Пользователю выключили микрофон на сервере
+    if(oldState.serverMute === false && newState.serverMute === true){
+        //Полуаем из логов кто это сделал
+        newMember.guild.fetchAuditLogs().then(logs => {
+            //Получения id пользователя, который выполнил непосредственно
+            userID = logs.entries.first().executor.id;
+            let info = `:orange_circle: :microphone: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключили микрофон на сервере.\n\nКто отключил:\n<@${userID}>`;
+            sysCh.send(EmbedMsg(0x8B572A, info));
+        });
+    }
+    //Пользователю включили микрофон на сервере
+    if(oldState.serverMute === true && newState.serverMute === false){
+        //Полуаем из логов кто это сделал
+        newMember.guild.fetchAuditLogs().then(logs => {
+            //Получения id пользователя, который выполнил непосредственно
+            userID = logs.entries.first().executor.id;
+            let info = `:orange_circle: :microphone: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключили микрофон на сервере.\n\nКто включил:\n<@${userID}>`;
+            sysCh.send(EmbedMsg(0x8B572A, info));
+        });
+    }
+    //Пользователю выключили звук на сервере
+    if(oldState.serverDeaf === false && newState.serverDeaf === true){
+        //Полуаем из логов кто это сделал
+        newMember.guild.fetchAuditLogs().then(logs => {
+            //Получения id пользователя, который выполнил непосредственно
+            userID = logs.entries.first().executor.id;
+            let info = `:orange_circle: :mute: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключили звук на сервере.\n\nКто отключил:\n<@${userID}>`;
+            sysCh.send(EmbedMsg(0x8B572A, info));
+        });
+    }
+    //Пользователю включили звук на сервере
+    if(oldState.serverDeaf === true && newState.serverDeaf === false){
+        //Полуаем из логов кто это сделал
+        newMember.guild.fetchAuditLogs().then(logs => {
+            //Получения id пользователя, который выполнил непосредственно
+            userID = logs.entries.first().executor.id;
+            let info = `:orange_circle: :loud_sound: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключили звук на сервере.\n\nКто включил:\n<@${userID}>`;
+            sysCh.send(EmbedMsg(0x8B572A, info));
+        });
+    }
 });
 
 //Сообщаем о новом пользователе на сервере
@@ -1038,7 +1078,7 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                     } else {
                         newNick = 'По умолчанию';
                     }
-                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n${oldNick}\n**Новый ник:**\n${newNick}\n\nКто сменил:\n<@${userID}>`;
+                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n${oldNick}\n**Новый ник:**\n\`${newNick}\`\n\nКто сменил:\n<@${userID}>`;
                     //Отправляем сообщение
                     sysCh.send(EmbedMsg(':repeat: **[ИЗМЕНЕН СЕРВЕРНЫЙ НИК]**', 0x50E3C2, info));
                 })
@@ -1077,7 +1117,6 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                 break;
         }
     }
-
 });
 
 //Токен
