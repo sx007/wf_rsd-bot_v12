@@ -299,7 +299,7 @@ else if (command === "кик") {
             return;
         };
         //Проверяем права на доступ к данной команде
-        if (message.member.hasPermission("KICK_MEMBERS")){
+        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
             if(numArg === 1) {
                 //Если указали только название команды
                 message.reply(`:exclamation: Неверно указана команда.\nИспользуй: \`${prefix}кик @Ник Причина_кика\``).then(m => m.delete({timeout: 20000}));
@@ -371,7 +371,7 @@ else if (command === "бан") {
             return;
         };
         //Проверяем права на доступ к данной команде
-        if (message.member.hasPermission("BAN_MEMBERS")){
+        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
             if(numArg === 1) {
                 //Если указали только название команды
                 message.reply(`:exclamation: Неверно указана команда.\nИспользуй: \`${prefix}бан @Ник Причина_бана\``).then(m => m.delete({timeout: 20000}));
