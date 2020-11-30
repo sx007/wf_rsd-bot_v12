@@ -59,6 +59,22 @@ function existInSrv(){
     }
 }
 
+//Проверка на JSON
+function IsJsonString(str) {
+    str = typeof item !== "string"
+        ? JSON.stringify(str)
+        : str;
+    try {
+        str = JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    if (typeof str === "object" && str !== null) {
+        return true;
+    }
+    return false;
+}
+
 //Удаление из текстого канала ссылок-приглашений
 if (message.content.includes('discord.gg/') ||  message.content.includes('discordapp.com/invite/')){
     //Если сообщение публичное
@@ -106,91 +122,6 @@ if (command === "ping") {
 
 else if (command === "sum") {
     message.reply(`Количество аргуметов: ${numArg}!`);
-}
-
-
-else if (command === "0") {
-    let link = "http://api.warface.ru/user/stat/?name=мельх1&server=1";
-    let urlEnc = encodeURI(link);
-    var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
-
-    //Запрос с лимитом
-    request(options, function(error, response, body){
-        //Если возникла ошибка
-        if (error) {
-            console.log(error);
-            return;
-        } else {
-            //Всё хорошо
-            console.log("Всё заебись!");
-            //Если есть ответ
-            if (response) {
-                console.log("yes response");
-                console.log(response.statusCode);
-                //Проверяем содержимое
-                if (body) {
-                    console.log("yes body");
-                    console.log(body);
-                } else {
-                    console.log("no body");
-                }
-            } else {
-                console.log("no response");
-            }
-        }
-    });
-
-
-    /*
-    request(url, {
-    headers: { 
-        "User-Agent": "My app - Get res API"
-        }
-    }, function (err, content, body) {
-        if (err) {
-            console.log(err);
-            return false;
-        }
-
-        //Parse the JSON
-        let res = JSON.parse(body)
-        //Your code.
-        console.log(res);
-    });
-    */
-    /*
-    var app = express();
-    // listen for requests :)
-    var listener = app.listen(process.env.PORT, function () {
-    console.log('Your app is listening on port ' + listener.address().port);
-    });
-
-    var request = require('request');
-    request('http://www.google.com', function (error, response, body) {
-    console.log('error:', error); // Print the error if one occurred
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    console.log('body:', body); // Print the HTML for the Google homepage.
-    });
-    */
-    /*
-    const options = {
-        url: 'http://api.warface.ru/user/stat/?name=%D0%A8%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BD%D1%8B%D0%B9_%D0%93%D0%BB%D0%B0%D0%B7&server=1',
-        headers: {
-        'User-Agent': 'request'
-        }
-    };
-    
-    function callback(error, response, body) {
-        if (!error && response.statusCode == 200) {
-        const info = JSON.parse(body);
-        //console.log(info.stargazers_count + " Stars");
-        console.log(info);
-        }
-    }
-    
-    request(options, callback);
-*/
-
 }
 
 /* Команда перезагрузки бота */
@@ -429,6 +360,41 @@ else if (command === "бан") {
     }
 }
 
+
+else if (command === "0") {
+    let link = "http://api.warface.ru/user/stat/?name=мельх1&server=1";
+    let urlEnc = encodeURI(link);
+    var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+
+    //Запрос с лимитом
+    request(options, function(error, response, body){
+        //Если возникла ошибка
+        if (error) {
+            console.log(error);
+            return;
+        } else {
+            //Всё хорошо
+            console.log("Всё заебись!");
+            //Если есть ответ
+            if (response) {
+                console.log("yes response");
+                console.log(response.statusCode);
+                //Проверяем содержимое
+                if (body) {
+                    console.log("yes body");
+                    console.log(body);
+                } else {
+                    console.log("no body");
+                }
+            } else {
+                console.log("no response");
+            }
+        }
+    });
+}
+
+
+
 /* WF */
 else if (command === "wf") {
     //console.log("WF");
@@ -441,21 +407,6 @@ else if (command === "wf") {
         .setFooter("Бот клана", "")
         .setTimestamp()
         return embed;
-    }
-    //Проверка на JSON
-    function IsJsonString(str) {
-        str = typeof item !== "string"
-            ? JSON.stringify(str)
-            : str;
-        try {
-            str = JSON.parse(str);
-        } catch (e) {
-            return false;
-        }
-        if (typeof str === "object" && str !== null) {
-            return true;
-        }
-        return false;
     }
 
     //парсинг данных с API
@@ -507,8 +458,11 @@ else if (command === "wf") {
             //Начинаем проверку на сервере Альфа
             let link = "http://api.warface.ru/user/stat/?name=" + uName + "&server=" + numSrv;
             let urlEnc = encodeURI(link);
-            var options = {url: urlEnc, json: true, headers: {'User-Agent': 'request'},timeout: 10000};
-            request.get(options, function(err, res, data) {
+            var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+            //Запрос
+            request(options, function(err, res, data){
+            //var options = {url: urlEnc, json: true, headers: {'User-Agent': 'request'},timeout: 10000};
+            //request.get(options, function(err, res, data) {
                 //Если ошибка
                 if (err) {
                     //console.log('Error: ', err);
@@ -539,8 +493,9 @@ else if (command === "wf") {
                                 nameSrv = numSrvToStr(numSrv);
                                 let link = "http://api.warface.ru/user/stat/?name=" + uName + "&server=" + numSrv;
                                 let urlEnc = encodeURI(link);
-                                var options = {url: urlEnc, json: true, headers: {'User-Agent': 'request'},timeout: 10000};
-                                request.get(options, function(err, res, data) {
+                                var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+                                //Запрос
+                                request(options, function(err, res, data){
                                     //Если ошибка
                                     if (err) {
                                         //console.log('Error: ', err);
@@ -566,8 +521,9 @@ else if (command === "wf") {
                                                     nameSrv = numSrvToStr(numSrv);
                                                     let link = "http://api.warface.ru/user/stat/?name=" + uName + "&server=" + numSrv;
                                                     let urlEnc = encodeURI(link);
-                                                    var options = {url: urlEnc, json: true, headers: {'User-Agent': 'request'},timeout: 10000};
-                                                    request.get(options, function(err, res, data) {
+                                                    var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+                                                    //Запрос
+                                                    request(options, function(err, res, data){
                                                         //Если ошибка
                                                         if (err) {
                                                             //console.log('Error: ', err);
@@ -637,7 +593,6 @@ else if (command === "wf") {
                         }
                     }
                 }
-                
             });
         } else {
             message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Указанный ник бойца должен быть **от 4 до 16 символов**`)).then(m => m.delete({timeout: 20000}));
@@ -695,8 +650,9 @@ else if (command === "wf") {
             //console.log(getCodeUser(uName, numSrv));
             let link = "http://api.warface.ru/user/stat/?name=" + uName + "&server=" + numSrv;
             let urlEnc = encodeURI(link);
-            var options = {url: urlEnc, json: true, headers: {'User-Agent': 'request', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36'},timeout: 10000};
-            request.get(options, function(err, res, data) {
+            var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+            //Запрос
+            request(options, function(err, res, data){
                 //Если ошибка
                 if (err) {
                     console.log('Error: ', err);
@@ -740,73 +696,6 @@ else if (command === "wf") {
             message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Указанный ник бойца должен быть **от 4 до 16 символов**`)).then(m => m.delete({timeout: 20000}));
         }
     }
-    /*
-    //http://api.warface.ru/rating/monthly?server=1&clan=%D0%A0%D0%B5%D0%B7%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D1%8B%D0%92%D0%B0%D1%80%D1%84%D0%B0%D0%B9%D1%81
-    //http://api.warface.ru/user/stat/?name=%D0%A8%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BD%D1%8B%D0%B9_%D0%93%D0%BB%D0%B0%D0%B7&server=1
-    var clanName = "РезидентыВарфайс";
-    let un = "...мот...";//...мот... мельх1
-    var srv = "1"; //Альфа - 1, Браво - 2, Чарли - 3, Дельта - 4
-    var uri = "http://api.warface.ru/user/stat/?name=" + un + "&server=" + srv;
-    //var uri = "https://sx007.000webhostapp.com/wf.php";
-    var url = encodeURI(uri);
-    request.get({
-        url: url,
-        json: true,
-        headers: {'User-Agent': 'request'}
-    }, (err, res, data) => {
-        //Если ошибка
-        if (err) {
-            console.log('Error: ', err);
-            if (err.code == "ENOTFOUND") {
-                console.log('Server not found');
-                message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0x02A5D0, 'Произошла непредвиденная ошибка. Попробуйте отправить команду чуть позже.')).then(m => m.delete({timeout: 20000}));
-            }
-            return;
-        }
-        //Если статус запроса 200
-        if (res.statusCode == 200) {
-            console.log('Status 200:', res.statusCode);
-            userCode = 0;
-        } else {
-            //Неверный запрос
-            if (res.statusCode == 400) {
-                console.log('Status 400:', res.statusCode);
-                userCode = 3;
-                if (data.message == "Пользователь не найден"){
-                    userCode = 1;
-                    //message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0x02A5D0, 'Пользователь не найден'));
-                }
-                if (data.message == "Игрок скрыл свою статистику"){
-                    userCode = 2;
-                }
-                if (data.message == "Персонаж неактивен"){
-                    userCode = 3;
-                }
-            }
-            //Доступ запрещён || Внутренняя ошибка сервера
-            if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
-                console.log('Status 403+404+500:', res.statusCode);
-                message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0x02A5D0, 'Сервер с информацией недоступен')).then(m => m.delete({timeout: 20000}));
-                return;
-            }
-        }
-        console.log('userCode: ', userCode);
-        //console.log(data);
-        console.log(IsJsonString(data));
-        //console.log('Data nickname: ', data.nickname);
-        if (userCode == 0){
-            message.reply(EmbedMsg('**Статус**', 0x02A5D0, "Успешно нашли"));
-        }
-        if (userCode == 1){
-            message.reply(EmbedMsg('**Статус**', 0x02A5D0, "Пользователь не найден"));
-        }
-        if (userCode == 2){
-            message.reply(EmbedMsg('**Статус**', 0x02A5D0, "Игрок скрыл свою статистику"));
-        }
-        if (userCode == 3){
-            message.reply(EmbedMsg('**Статус**', 0x02A5D0, "Персонаж неактивен"));
-        }
-    });*/
 }
 
 
