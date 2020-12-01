@@ -8,6 +8,8 @@ const token = process.env.BOT_TOKEN;
 const prefix = process.env.PREFIX;
 const idChMsg = process.env.ID_CHANNEL_SEND;
 const idSrv = process.env.ID_SERVER;
+const clNm = process.env.CLAN_NAME;
+const clSr = process.env.CLAN_SRV;
 
 /* Вывод сообщения о работе и готовности бота */
 bot.on('ready', () => { 
@@ -563,7 +565,7 @@ else if (command === "боец") {
 
     //Если указали только название команды
     if(numArg === 1 || numArg > 3) {
-        message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Укажите через пробел ник бойца, которого будите искать.\nТак же можно указать сервер через пробел.\nПример: \`${prefix}wf НикБойца Альфа\``)).then(m => m.delete({timeout: 20000}));
+        message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Укажите через пробел ник бойца, которого будите искать.\nТак же можно указать сервер через пробел.\n\nПример: \`${prefix}wf НикБойца Альфа\``)).then(m => m.delete({timeout: 20000}));
         return;
     }
     //Если не указали где искать
@@ -792,7 +794,101 @@ else if (command === "боец") {
 
 /* Команда Клан */
 else if (command === "клан") {
-    
+    //Заготовка для Embed сообщения
+    function EmbedMsg(title, color, Descr){
+        let embed = new Discord.MessageEmbed()
+        .setTitle(title)
+        .setColor(color)
+        .setDescription(Descr)
+        .setFooter("Бот клана", "")
+        .setTimestamp()
+        return embed;
+    }
+
+
+    //Если указали только название команды
+    if(numArg === 1 || numArg > 3) {
+        //Преобразуем номер сервера в число
+        let numClSv = parseInt(clSr, 10);
+        if (clNm != '' && numClSv != '') {
+            //Если указан Клан и сервер в переменных
+            console.log("Типо указаны переменные");
+            //Проверяем название сервера
+            if (clNm.length >= 4 && clNm.length <= 16) {
+                //Номер сервера + Название сервера
+                console.log("Название клана в порядке");
+                //Проверяем сервер - число или нет
+                if (!isNaN(numClSv)) {
+                    //Если число
+                    console.log("Сервер указан числом");
+                    //
+                    if (numClSv > 0 && numClSv < 4) {
+                        console.log("Сервер указан числом от 1 до 3");
+                    } else {
+                        console.log("Сервер указан числом, но не от 1 до 3");
+                        message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Сервер указан числом, но не от 1 до 3`)).then(m => m.delete({timeout: 20000}));
+                        return;
+                    }
+                } else {
+                    //Не число
+                    console.log("Сервер указан не числом");
+                    message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Сервер указан не числом`)).then(m => m.delete({timeout: 20000}));
+                    return;
+                }
+            } else {
+                console.log("Название клана не в порядке");
+                message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Название клана должено быть **от 4 до 16 символов**`)).then(m => m.delete({timeout: 20000}));
+                return;
+            }
+        } else {
+            console.log("Не указаны переменные");
+            message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Укажите через пробел название клана, которого будите искать.\nТак же можно указать сервер через пробел.\n\nПример: \`${prefix}wf НазваниеКлана Альфа\``)).then(m => m.delete({timeout: 20000}));
+            return;
+        }
+    }
+    //Если не указали где искать
+    if(numArg === 2) {
+        let cName = args[0].toLowerCase();
+        //Проверяем указанный ник
+        if (cName.length >= 4 && cName.length <= 16) {
+            //Номер сервера + Название сервера
+            let numSrv = 1;
+        } else {
+            message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Название клана должено быть **от 4 до 16 символов**`)).then(m => m.delete({timeout: 20000}));
+            return;
+        }
+    }
+    //Если указали где искать
+    if(numArg === 3) {
+        //Клан
+        let cName = args[0].toLowerCase();
+        //Проверяем указанный ник
+        if (cName.length >= 4 && cName.length <= 16) {
+            //Сервер
+            let cSrv = args[1].toLowerCase();
+            //Номер сервера + Название сервера
+            let numSrv;
+            let nameSrv;
+            //Проверяем указанное название сервера
+            if (cSrv == "альфа"){
+                numSrv = 1;
+                nameSrv = numSrvToStr(numSrv);
+            } else if (cSrv == "браво"){
+                numSrv = 2;
+                nameSrv = numSrvToStr(numSrv);
+            } else if (cSrv == "чарли"){
+                numSrv = 3;
+                nameSrv = numSrvToStr(numSrv);
+            } else {
+                message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`**Неверно указан сервер.**\n\nДоступные варианты:\n\`Альфа Браво Чарли\``)).then(m => m.delete({timeout: 20000}));
+                return;
+            }
+
+        }
+    }
+
+
+    /*
     let link = "http://api.warface.ru/rating/monthly?server=1&clan=-ДошиРаки-";
     let urlEnc = encodeURI(link);
     var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
@@ -835,6 +931,7 @@ else if (command === "клан") {
             }
         }
     });
+    */
 }
 
 });
