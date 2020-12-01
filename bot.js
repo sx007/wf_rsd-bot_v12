@@ -75,6 +75,19 @@ function IsJsonString(str) {
     return false;
 }
 
+//Номер сервера в название
+function numSrvToStr(num){
+    if (num == 1){
+        return "Альфа";
+    }
+    if (num == 2){
+        return "Браво";
+    }
+    if (num == 3){
+        return "Чарли";
+    }
+}
+
 //Удаление из текстого канала ссылок-приглашений
 if (message.content.includes('discord.gg/') ||  message.content.includes('discordapp.com/invite/')){
     //Если сообщение публичное
@@ -89,18 +102,7 @@ if (message.content.includes('discord.gg/') ||  message.content.includes('discor
     }
 }
 
-//Номер сервера в название
-function numSrvToStr(num){
-    if (num == 1){
-        return "Альфа";
-    }
-    if (num == 2){
-        return "Браво";
-    }
-    if (num == 3){
-        return "Чарли";
-    }
-}
+
 
 //Проверка на наличие префикса в начале сообщения
 if (!message.content.startsWith(prefix)) return;
@@ -489,9 +491,8 @@ else if (command === "0") {
 
 
 
-/* WF */
-else if (command === "wf") {
-    //console.log("WF");
+/* Информация по бойцу */
+else if (command === "боец") {
     //Заготовка для Embed сообщения
     function EmbedMsg(title, color, Descr){
         let embed = new Discord.MessageEmbed()
@@ -504,27 +505,64 @@ else if (command === "wf") {
     }
 
     //парсинг данных с API
-    function parseApi(str) {
-        //Проверяем полученное содержимое на JSON
-        if (IsJsonString(str) == true) {
-            //Если это JSON
-            console.log("JSON");
-
-        } else {
-            //Если это не JSON
-            console.log("не JSON");
+    function parseApi(info, srv) {
+        //Класс в игре
+        function classGame(cl) {
+            //Проверяем
+            if (cl === false) {
+                return "-";
+            } else {
+                if (cl === "Rifleman")
+                {
+                    return "Штурмовик";
+                }
+                if (cl === "Engineer")
+                {
+                    return "Инженер";
+                }
+                if (cl === "Medic")
+                {
+                    return "Медик";
+                }
+                if (cl === "Recon")
+                {
+                    return "Снайпер";
+                }
+                if (cl === "Heavy")
+                {
+                    return "СЭД";
+                }
+            }
         }
+        var user = "";
+        //Ник в игре
+        user += "**Ник:**   ``" + info.nickname + "``\n";
+        //Игровой сервер
+        user += "**Игровой сервер:**   ``" + numSrvToStr(srv) + "``\n";
+        //Клан
+        if (info.clan_name) {
+            user += "**Клан:**   ``" + info.clan_name + "``\n";
+        } else {
+            user += "**Клан:**   ``-``\n";
+        }
+        //Ранг
+        user += "**Ранг:**   ``" + info.rank_id + "``\n";
+        //Общее время матчей
+        user += "**Общее время матчей:**   ``" + info.playtime_h + "ч " + info.playtime_m + "м``\n";
+        //Любимый класс PvP
+        user += "**Любимый класс PvP:**   ``" + classGame(info.favoritPVP) + "``\n";
+        //Соотн. убийств/смертей:
+        user += "**Соотн. убийств/смертей:**   ``" + info.pvp + "``\n";
+        //Побед/Поражений
+        user += "**Побед/Поражений:**   ``" + info.pvp_wins + " / " + info.pvp_lost + "``\n";
+        //Любимый класс PvE
+        user += "**Любимый класс PvE:**   ``" + classGame(info.favoritPVE) + "``\n";
+        //Пройдено PvE
+        user += "**Пройдено PvE:**   ``" + info.pve_wins + "``";
+        //Выводим
+        return user;
     }
-    /*
-    var data = JSON.parse(resp);
-    if(typeof data.age === 'undefined')
-    alert('Поля "age" нет');
-    else
-    alert('Поле "age" в наличии, значение: ' + data.age);
-    */
 
-
-    
     //Если указали только название команды
     if(numArg === 1 || numArg > 3) {
         message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Укажите через пробел ник бойца, которого будите искать.\nТак же можно указать сервер через пробел.\nПример: \`${prefix}wf НикБойца Альфа\``)).then(m => m.delete({timeout: 20000}));
@@ -532,7 +570,6 @@ else if (command === "wf") {
     }
     //Если не указали где искать
     if(numArg === 2) {
-        //console.log(args[0]);
         let uName = args[0].toLowerCase();
         //Проверяем указанный ник
         if (uName.length >= 4 && uName.length <= 16) {
@@ -545,11 +582,9 @@ else if (command === "wf") {
             var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
             //Запрос
             request(options, function(err, res, data){
-            //var options = {url: urlEnc, json: true, headers: {'User-Agent': 'request'},timeout: 10000};
-            //request.get(options, function(err, res, data) {
                 //Если ошибка
                 if (err) {
-                    //console.log('Error: ', err);
+                    console.log('Error: ', err);
                     message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                     return;
                 }
@@ -558,15 +593,12 @@ else if (command === "wf") {
                     message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Не получен ответ на запроса в течении 10 секунд.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                     return;
                 } else {
-                    console.log('statusCode:', res && res.statusCode);
                     //Если статус запроса 200
                     if (res.statusCode == 200) {
                         //Нашли на Альфа
                         if (IsJsonString(data) == true) {
-                            console.log("norm");
-                        }
-                        parseApi(data);
-                        message.reply(EmbedMsg(':bar_chart: Статистика по бойцу',0x02A5D0,`Боец найден на сервере **${nameSrv}**\n`));
+                            message.reply(EmbedMsg(':bar_chart: Статистика по бойцу', 0x02A5D0 , parseApi(data, 1)));
+                        }                        
                     } else {
                         //Неверный запрос
                         if (res.statusCode == 400) {
@@ -582,7 +614,7 @@ else if (command === "wf") {
                                 request(options, function(err, res, data){
                                     //Если ошибка
                                     if (err) {
-                                        //console.log('Error: ', err);
+                                        console.log('Error: ', err);
                                         message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                         return;
                                     }
@@ -594,7 +626,9 @@ else if (command === "wf") {
                                         //Если статус запроса 200
                                         if (res.statusCode == 200) {
                                             //Нашли на Браво
-                                            message.reply(EmbedMsg(':bar_chart: Статистика по бойцу',0x02A5D0,`Боец найден на сервере **${nameSrv}**\n`));
+                                            if (IsJsonString(data) == true) {
+                                                message.reply(EmbedMsg(':bar_chart: Статистика по бойцу', 0x02A5D0 , parseApi(data, 2)));
+                                            }
                                         } else {
                                             //Неверный запрос
                                             if (res.statusCode == 400) {
@@ -610,7 +644,7 @@ else if (command === "wf") {
                                                     request(options, function(err, res, data){
                                                         //Если ошибка
                                                         if (err) {
-                                                            //console.log('Error: ', err);
+                                                            console.log('Error: ', err);
                                                             message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                                             return;
                                                         }
@@ -622,7 +656,9 @@ else if (command === "wf") {
                                                             //Если статус запроса 200
                                                             if (res.statusCode == 200) {
                                                                 //Нашли на Чарли
-                                                                message.reply(EmbedMsg(':bar_chart: Статистика по бойцу',0x02A5D0,`Боец найден на сервере **${nameSrv}**\n`));
+                                                                if (IsJsonString(data) == true) {
+                                                                    message.reply(EmbedMsg(':bar_chart: Статистика по бойцу', 0x02A5D0 , parseApi(data, 3)));
+                                                                }
                                                             } else {
                                                                 //Неверный запрос
                                                                 if (res.statusCode == 400) {
@@ -685,13 +721,10 @@ else if (command === "wf") {
     }
     //Если указали где искать
     if(numArg === 3) {
-        //console.log(args[0]);
-        //console.log(args[1]);
         //Ник бойца + сервер
         let uName = args[0].toLowerCase();
         //Проверяем указанный ник
         if (uName.length >= 4 && uName.length <= 16) {
-            //console.log("Количество символов в нике: ", uName.length);
             let uSrv = args[1].toLowerCase();
             //Номер сервера + Название сервера
             let numSrv;
@@ -699,39 +732,18 @@ else if (command === "wf") {
             //Проверяем указанное название сервера
             if (uSrv == "альфа"){
                 numSrv = 1;
-                nameSrv = "Альфа";
+                nameSrv = numSrvToStr(numSrv);
             } else if (uSrv == "браво"){
                 numSrv = 2;
-                nameSrv = "Браво";
+                nameSrv = numSrvToStr(numSrv);
             } else if (uSrv == "чарли"){
                 numSrv = 3;
-                nameSrv = "Чарли";
+                nameSrv = numSrvToStr(numSrv);
             } else {
                 message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`**Неверно указан сервер.**\n\nДоступные варианты:\n\`Альфа Браво Чарли\``)).then(m => m.delete({timeout: 20000}));
                 return;
             }
-            //Функция названия класса в игре
-            function classInGame(cl){
-                let gameClass;
-                if (cl == "Rifleman"){
-                    gameClass = "Штурмовик";
-                }
-                if (cl == "Engineer"){
-                    gameClass = "Инженер";
-                }
-                if (cl == "Medic"){
-                    gameClass = "Медик";
-                }
-                if (cl == "Recon"){
-                    gameClass = "Снайпер";
-                }
-                if (cl == "Heavy"){
-                    gameClass = "СЭД";
-                }
-                return gameClass;
-            }
             //Начинаем проверку на указанном сервере
-            //console.log(getCodeUser(uName, numSrv));
             let link = "http://api.warface.ru/user/stat/?name=" + uName + "&server=" + numSrv;
             let urlEnc = encodeURI(link);
             var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
@@ -745,19 +757,18 @@ else if (command === "wf") {
                 }
                 //Если нет ответа запроса
                 if(!res) {
-                    console.log('res: ', res);
                     message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Не получен ответ на запроса в течении 10 секунд.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                     return;
                 } else {
                     //Если статус запроса 200
                     if (res.statusCode == 200) {
-                        //console.log('Status 200:', res.statusCode);
-                        message.reply(EmbedMsg(':bar_chart: Статистика по бойцу',0x02A5D0,`Информация...`));
+                        if (IsJsonString(data) == true) {
+                            console.log("Нашли на указанном сервере");
+                            message.reply(EmbedMsg(':bar_chart: Статистика по бойцу', 0x02A5D0 , parseApi(data, numSrv)));
+                        }
                     } else {
                         //Неверный запрос
                         if (res.statusCode == 400) {
-                            //console.log('Status 400:', res.statusCode);
-                            //console.log('Data.message 400:', data.message);
                             if (data.message == "Пользователь не найден"){
                                 message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`На указанном сервере такой __боец не найден__`));
                             }
@@ -770,7 +781,6 @@ else if (command === "wf") {
                         }
                         //Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
                         if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
-                            //console.log('Status 403+404+500:', res.statusCode);
                             message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                         }
                     }
