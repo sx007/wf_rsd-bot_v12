@@ -157,6 +157,22 @@ else if (command === "rs") {
     }
 }
 
+/* Подбросить монетку */
+else if (command === "монетка") {
+    //Вычисляем случайное число от 1 до 3
+    var random = Math.floor(Math.random() * 4) + 1;
+    if (random === 1) {
+        //Если число = 1, то выпадает орёл.
+        message.channel.send(':full_moon: Орёл!');
+    } else if (random === 2) { 
+        //Если число = 2, то выпадает решка.
+        message.channel.send(':new_moon: Решка!');
+    } else if (random === 3) { 
+        //Если число = 3, то монета падает ребром.
+        message.channel.send(':last_quarter_moon: Монета упала ребром!');
+    }
+}
+
 else if (command === "lol") {
     const nArg = numArg-2;
     message.reply("Всего аргрументов: " + nArg + " Последний аргумент: " + args[nArg] + "!");
@@ -271,7 +287,7 @@ else if (command === "кик") {
             let sysCh = bot.channels.cache.get(idChMsg);
             //Формирование 
             let KickUser = new Discord.MessageEmbed()
-            .setTitle(':no_pedestrians: **[КИКНУЛИ ПОЛЬЗОВАТЕЛЯ]**')
+            .setTitle(':diamonds: :no_pedestrians: **[КИКНУЛИ ПОЛЬЗОВАТЕЛЯ]**')
             .setColor(0xFF3700)
             .setDescription(`Пользователя ${user}\nНик: \`${user.displayName}\`\nTag: \`${user.user.username}#${user.user.discriminator}\`\n\nКто кикнул:\n${message.author}`)
             .setTimestamp()
@@ -343,7 +359,7 @@ else if (command === "бан") {
             let sysCh = bot.channels.cache.get(idChMsg);
             //Формирование 
             let BanUser = new Discord.MessageEmbed()
-            .setTitle(':no_pedestrians: **[ЗАБАНИЛИ ПОЛЬЗОВАТЕЛЯ]**')
+            .setTitle(':diamonds: :no_pedestrians: **[ЗАБАНИЛИ ПОЛЬЗОВАТЕЛЯ]**')
             .setColor(0xFF3700)
             .setDescription(`Пользователя ${user}\nНик: \`${user.displayName}\`\nTag: \`${user.user.username}#${user.user.discriminator}\`\n\nКто забанил:\n${message.author}`)
             .setTimestamp()
@@ -796,7 +812,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         newMember.guild.fetchAuditLogs().then(logs => {
             //Получения id пользователя, который выполнил непосредственно
             userID = logs.entries.first().executor.id;
-            let info = `:orange_circle: :microphone: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключили микрофон на сервере.\n\nКто отключил:\n<@${userID}>`;
+            let info = `:large_orange_diamond: :microphone: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключили микрофон на сервере.\n\nКто отключил:\n<@${userID}>`;
             sysCh.send(EmbedMsg(0x8B572A, info));
         });
     }
@@ -806,7 +822,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         newMember.guild.fetchAuditLogs().then(logs => {
             //Получения id пользователя, который выполнил непосредственно
             userID = logs.entries.first().executor.id;
-            let info = `:orange_circle: :microphone: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключили микрофон на сервере.\n\nКто включил:\n<@${userID}>`;
+            let info = `:large_orange_diamond: :microphone: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключили микрофон на сервере.\n\nКто включил:\n<@${userID}>`;
             sysCh.send(EmbedMsg(0x8B572A, info));
         });
     }
@@ -816,7 +832,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         newMember.guild.fetchAuditLogs().then(logs => {
             //Получения id пользователя, который выполнил непосредственно
             userID = logs.entries.first().executor.id;
-            let info = `:orange_circle: :mute: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключили звук на сервере.\n\nКто отключил:\n<@${userID}>`;
+            let info = `:large_orange_diamond: :mute: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключили звук на сервере.\n\nКто отключил:\n<@${userID}>`;
             sysCh.send(EmbedMsg(0x8B572A, info));
         });
     }
@@ -826,7 +842,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         newMember.guild.fetchAuditLogs().then(logs => {
             //Получения id пользователя, который выполнил непосредственно
             userID = logs.entries.first().executor.id;
-            let info = `:orange_circle: :loud_sound: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключили звук на сервере.\n\nКто включил:\n<@${userID}>`;
+            let info = `:large_orange_diamond: :loud_sound: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключили звук на сервере.\n\nКто включил:\n<@${userID}>`;
             sysCh.send(EmbedMsg(0x8B572A, info));
         });
     }
