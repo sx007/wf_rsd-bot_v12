@@ -89,6 +89,19 @@ if (message.content.includes('discord.gg/') ||  message.content.includes('discor
     }
 }
 
+//Номер сервера в название
+function numSrvToStr(num){
+    if (num == 1){
+        return "Альфа";
+    }
+    if (num == 2){
+        return "Браво";
+    }
+    if (num == 3){
+        return "Чарли";
+    }
+}
+
 //Проверка на наличие префикса в начале сообщения
 if (!message.content.startsWith(prefix)) return;
 //Получение команды из полученного сообщения
@@ -376,9 +389,66 @@ else if (command === "бан") {
     }
 }
 
-
 else if (command === "0") {
-    let link = "http://api.warface.ru/user/stat/?name=мельх1&server=1";
+    //парсинг данных с API
+    function parseApi(info, srv) {
+        //Класс в игре
+        function classGame(cl) {
+            //Проверяем
+            if (cl === false) {
+                return "-";
+            } else {
+                if (cl === "Rifleman")
+                {
+                    return "Штурмовик";
+                }
+                if (cl === "Engineer")
+                {
+                    return "Инженер";
+                }
+                if (cl === "Medic")
+                {
+                    return "Медик";
+                }
+                if (cl === "Recon")
+                {
+                    return "Снайпер";
+                }
+                if (cl === "Heavy")
+                {
+                    return "СЭД";
+                }
+            }
+        }
+        var user = "";
+        //Ник в игре
+        user += "Ник: " + info.nickname;
+        //Игровой сервер
+        user += "\nИгровой сервер: " + numSrvToStr(srv);
+        //Клан
+        if (info.clan_name) {
+            user += "\nКлан: " + info.clan_name;
+        } else {
+            user += "\nКлан: -";
+        }
+        //Ранг
+        user += "\nРанг: " + info.rank_id;
+        //Общее время матчей
+        user += "\nОбщее время матчей: " + info.playtime_h + "ч " + info.playtime_m + "м";
+        //Любимый класс PvP
+        user += "\nЛюбимый класс PvP: " + classGame(info.favoritPVP);
+        //Соотн. убийств/смертей:
+        user += "\nСоотн. убийств/смертей: " + info.pvp;
+        //Побед/Поражений
+        user += "\nПобед/Поражений: " + info.pvp_wins + " / " + info.pvp_lost;
+        //Любимый класс PvE
+        user += "\nЛюбимый класс PvE: " + classGame(info.favoritPVE);
+        //Пройдено PvE
+        user += "\nПройдено PvE: " + info.pve_wins;
+        //Выводим
+        return user;
+    }
+    let link = "http://api.warface.ru/user/stat/?name=Шоколадный_Глаз&server=1";
     let urlEnc = encodeURI(link);
     var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
 
@@ -398,7 +468,15 @@ else if (command === "0") {
                 //Проверяем содержимое
                 if (body) {
                     console.log("yes body");
-                    console.log(body);
+                    //Проверяем полученное содержимое на JSON
+                    if (IsJsonString(body) == true) {
+                        //Если это JSON
+                        console.log("JSON");
+                        console.log(parseApi(body, 1));
+                    } else {
+                        //Если это не JSON
+                        console.log("не JSON");
+                    }
                 } else {
                     console.log("no body");
                 }
@@ -431,6 +509,7 @@ else if (command === "wf") {
         if (IsJsonString(str) == true) {
             //Если это JSON
             console.log("JSON");
+
         } else {
             //Если это не JSON
             console.log("не JSON");
@@ -445,18 +524,7 @@ else if (command === "wf") {
     */
 
 
-    //Номер сервера в название
-    function numSrvToStr(num){
-        if (num == 1){
-            return "Альфа";
-        }
-        if (num == 2){
-            return "Браво";
-        }
-        if (num == 3){
-            return "Чарли";
-        }
-    }
+    
     //Если указали только название команды
     if(numArg === 1 || numArg > 3) {
         message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Укажите через пробел ник бойца, которого будите искать.\nТак же можно указать сервер через пробел.\nПример: \`${prefix}wf НикБойца Альфа\``)).then(m => m.delete({timeout: 20000}));
