@@ -489,8 +489,6 @@ else if (command === "0") {
     });
 }
 
-
-
 /* Информация по бойцу */
 else if (command === "боец") {
     //Заготовка для Embed сообщения
@@ -792,6 +790,52 @@ else if (command === "боец") {
     }
 }
 
+/* Команда Клан */
+else if (command === "клан") {
+    
+    let link = "http://api.warface.ru/rating/monthly?server=1&clan=-ДошиРаки-";
+    let urlEnc = encodeURI(link);
+    var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+
+    //Запрос с лимитом
+    request(options, function(error, response, body){
+        //Если возникла ошибка
+        if (error) {
+            console.log(error);
+            return;
+        } else {
+            //Всё хорошо
+            console.log("Всё заебись!");
+            //Если есть ответ
+            if (response) {
+                console.log("yes response");
+                console.log(response.statusCode);
+                //Проверяем содержимое
+                if (body) {
+                    console.log("yes body");
+                    //Проверяем полученное содержимое на JSON
+                    if (IsJsonString(body) == true) {
+                        //Если это JSON
+                        console.log("JSON");
+                        //console.log(body);
+                        //Фильтруем и оставляем нужный
+                        var clan = body.filter(function(c){
+                            return (c.clan === '-ДошиРаки-');
+                        });
+                        console.log(clan);
+                    } else {
+                        //Если это не JSON
+                        console.log("не JSON");
+                    }
+                } else {
+                    console.log("no body");
+                }
+            } else {
+                console.log("no response");
+            }
+        }
+    });
+}
 
 });
 
