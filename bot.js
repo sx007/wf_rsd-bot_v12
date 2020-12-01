@@ -811,38 +811,105 @@ else if (command === "клан") {
         //Преобразуем номер сервера в число
         let numClSv = parseInt(clSr, 10);
         if (clNm != '' && numClSv != '') {
-            //Если указан Клан и сервер в переменных
-            console.log("Типо указаны переменные");
+            //Типо указаны переменные
             //Проверяем название сервера
             if (clNm.length >= 4 && clNm.length <= 16) {
-                //Номер сервера + Название сервера
-                console.log("Название клана в порядке");
+                //Название клана в порядке
                 //Проверяем сервер - число или нет
                 if (!isNaN(numClSv)) {
-                    //Если число
-                    console.log("Сервер указан числом");
-                    //
+                    //Сервер указан числом
+                    //Сервер указывает в диапазоне от 1 до 3
                     if (numClSv > 0 && numClSv < 4) {
                         console.log("Сервер указан числом от 1 до 3");
+                        let link = "http://api.warface.ru/rating/monthly?server="+ numClSv + "&clan=" + clNm;
+                        let urlEnc = encodeURI(link);
+                        var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+                        //Запрос
+                        request(options, function(error, response, body){
+                            //Если возникла ошибка
+                            if (error) {
+                                console.log(error);
+                                return;
+                            } else {
+                                //Всё хорошо
+                                console.log("Всё заебись!");
+                                //Если есть ответ
+                                if (response) {
+                                    console.log("yes response");
+                                    console.log(response.statusCode);
+                                    //Если статус запроса 200
+                                    if (response.statusCode == 200) {
+                                        if (IsJsonString(body) == true) {
+                                            console.log("Нашли на указанном сервере");
+                                            //Если это JSON
+                                            console.log("JSON");
+                                            //Фильтруем от других кланов
+                                            var clan = body.filter(function(c){
+                                                return (c.clan === clNm);
+                                            });
+                                            console.log(clan);
+                                            //message.reply(EmbedMsg(':bar_chart: Статистика по бойцу', 0x02A5D0 , parseApi(data, numSrv)));
+                                            return;
+                                        } else {
+                                            //Ошибка
+                                            console.log("не JSON");
+                                            return;
+                                        }
+                                    } else {
+                                        //Неверный запрос
+                                        if (response.statusCode == 400) {
+                                            if (IsJsonString(body) == true) {
+                                                console.log("Что-то не так");
+                                                console.log("JSON");
+                                                if (body.message === "Клан не найден") {
+                                                    //Если не нашли клан
+                                                    console.log("Наш клан не найден");
+                                                    //message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, 'Наш клан __не найден__')).then(m => m.delete({timeout: 20000}));
+                                                    return;
+                                                }
+                                                if (body.message === "Ваш клан еще не набирал очков в этом месяце") {
+                                                    //Если нет очков
+                                                    console.log("Наш клан еще не набирал очков");
+                                                    //message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, 'Наш клан еще __не набирал очков__ в этом месяце')).then(m => m.delete({timeout: 20000}));
+                                                    return;
+                                                }
+                                            } else {
+                                                //Ошибка
+                                                console.log("не JSON");
+                                                return;
+                                            }
+                                        }
+                                        //Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
+                                        if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
+                                            console.log("403+404+500");
+                                            //message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                                            return;
+                                        }
+                                    }
+                                } else {
+                                    console.log("no response");
+                                    return;
+                                }
+                            }
+                        });
                     } else {
-                        console.log("Сервер указан числом, но не от 1 до 3");
-                        message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Сервер указан числом, но не от 1 до 3`)).then(m => m.delete({timeout: 20000}));
+                        //Сервер указан числом, но не от 1 до 3
+                        message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Укажите через пробел название клана, которого будите искать.\nТак же можно указать сервер через пробел.\n\nПример: \`${prefix}wf НазваниеКлана Альфа\``)).then(m => m.delete({timeout: 20000}));
                         return;
                     }
                 } else {
-                    //Не число
-                    console.log("Сервер указан не числом");
-                    message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Сервер указан не числом`)).then(m => m.delete({timeout: 20000}));
+                    //Сервер указан не числом
+                    message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Укажите через пробел название клана, которого будите искать.\nТак же можно указать сервер через пробел.\n\nПример: \`${prefix}wf НазваниеКлана Альфа\``)).then(m => m.delete({timeout: 20000}));
                     return;
                 }
             } else {
-                console.log("Название клана не в порядке");
-                message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Название клана должено быть **от 4 до 16 символов**`)).then(m => m.delete({timeout: 20000}));
+                //Название клана не в порядке
+                message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Укажите через пробел название клана, которого будите искать.\nТак же можно указать сервер через пробел.\n\nПример: \`${prefix}wf НазваниеКлана Альфа\``)).then(m => m.delete({timeout: 20000}));
                 return;
             }
         } else {
-            console.log("Не указаны переменные");
-            message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Укажите через пробел название клана, которого будите искать.\nТак же можно указать сервер через пробел.\n\nПример: \`${prefix}wf НазваниеКлана Альфа\``)).then(m => m.delete({timeout: 20000}));
+            //Не указаны переменные
+            message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Укажите через пробел название клана, которого будите искать.\nТак же можно указать сервер через пробел.\n\nПример: \`${prefix}wf НазваниеКлана Альфа\``)).then(m => m.delete({timeout: 20000}));
             return;
         }
     }
@@ -854,7 +921,7 @@ else if (command === "клан") {
             //Номер сервера + Название сервера
             let numSrv = 1;
         } else {
-            message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Название клана должено быть **от 4 до 16 символов**`)).then(m => m.delete({timeout: 20000}));
+            message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Название клана должено быть **от 4 до 16 символов**`)).then(m => m.delete({timeout: 20000}));
             return;
         }
     }
@@ -880,7 +947,7 @@ else if (command === "клан") {
                 numSrv = 3;
                 nameSrv = numSrvToStr(numSrv);
             } else {
-                message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`**Неверно указан сервер.**\n\nДоступные варианты:\n\`Альфа Браво Чарли\``)).then(m => m.delete({timeout: 20000}));
+                message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `**Неверно указан сервер.**\n\nДоступные варианты:\n\`Альфа Браво Чарли\``)).then(m => m.delete({timeout: 20000}));
                 return;
             }
 
@@ -1030,7 +1097,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         //Полуаем из логов кто это сделал
         newMember.guild.fetchAuditLogs().then(logs => {
             //Получения id пользователя, который выполнил непосредственно
-            userID = logs.entries.first().executor.id;
+            let userID = logs.entries.first().executor.id;
             let info = `:large_orange_diamond: :microphone: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключили микрофон на сервере.\n\nКто отключил:\n<@${userID}>`;
             sysCh.send(EmbedMsg(0x8B572A, info));
         });
@@ -1040,7 +1107,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         //Полуаем из логов кто это сделал
         newMember.guild.fetchAuditLogs().then(logs => {
             //Получения id пользователя, который выполнил непосредственно
-            userID = logs.entries.first().executor.id;
+            let userID = logs.entries.first().executor.id;
             let info = `:large_orange_diamond: :microphone: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключили микрофон на сервере.\n\nКто включил:\n<@${userID}>`;
             sysCh.send(EmbedMsg(0x8B572A, info));
         });
@@ -1050,7 +1117,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         //Полуаем из логов кто это сделал
         newMember.guild.fetchAuditLogs().then(logs => {
             //Получения id пользователя, который выполнил непосредственно
-            userID = logs.entries.first().executor.id;
+            let userID = logs.entries.first().executor.id;
             let info = `:large_orange_diamond: :mute: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвыключили звук на сервере.\n\nКто отключил:\n<@${userID}>`;
             sysCh.send(EmbedMsg(0x8B572A, info));
         });
@@ -1060,7 +1127,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
         //Полуаем из логов кто это сделал
         newMember.guild.fetchAuditLogs().then(logs => {
             //Получения id пользователя, который выполнил непосредственно
-            userID = logs.entries.first().executor.id;
+            let userID = logs.entries.first().executor.id;
             let info = `:large_orange_diamond: :loud_sound: Пользователю <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nвключили звук на сервере.\n\nКто включил:\n<@${userID}>`;
             sysCh.send(EmbedMsg(0x8B572A, info));
         });
