@@ -10,6 +10,7 @@ const idChMsg = process.env.ID_CHANNEL_SEND;
 const idSrv = process.env.ID_SERVER;
 const clNm = process.env.CLAN_NAME;
 const clSr = process.env.CLAN_SRV;
+const idAdmMod = process.env.ID_ADM_MOD_ROLE;
 
 /* Вывод сообщения о работе и готовности бота */
 bot.on('ready', () => { 
@@ -43,6 +44,29 @@ function hasRole(mem, r){
     else {
         return false;
     }
+}
+
+//Проверка ролей Администратора и Модераторов по ID из переменной (конфигурации)
+function hasRoleId(mem){
+    var idRepl = idAdmMod.replace(/ +/g, ' ');
+    var idSplit = idRepl.split(' ');
+    var result = false;
+    //Перебираем ID в переменной
+    idSplit.forEach(function(idSplit) {
+        if (idSplit != '') {
+            //Проверяем длинну ID
+            if (idSplit.length === 18) {
+                //Проверка роли
+                var members = bot.guilds.cache.get(idSrv).roles.cache.find(role => role.id === idSplit).members.map(m=>m.user.id);
+                //Находим среди пользователей с ролью автора сообщения
+                if (members.indexOf(mem.id) != -1) {
+                    result = true;
+                }
+            }
+        }
+    });
+    //Выводим результат
+    return result;
 }
 
 //Проверка наличия пользователя на сервере
@@ -394,101 +418,34 @@ else if (command === "бан") {
 }
 
 else if (command === "0") {
-    //парсинг данных с API
-    function parseApi(info, srv) {
-        //Класс в игре
-        function classGame(cl) {
-            //Проверяем
-            if (cl === false) {
-                return "-";
-            } else {
-                if (cl === "Rifleman")
-                {
-                    return "Штурмовик";
-                }
-                if (cl === "Engineer")
-                {
-                    return "Инженер";
-                }
-                if (cl === "Medic")
-                {
-                    return "Медик";
-                }
-                if (cl === "Recon")
-                {
-                    return "Снайпер";
-                }
-                if (cl === "Heavy")
-                {
-                    return "СЭД";
-                }
-            }
-        }
-        var user = "";
-        //Ник в игре
-        user += "Ник: " + info.nickname;
-        //Игровой сервер
-        user += "\nИгровой сервер: " + numSrvToStr(srv);
-        //Клан
-        if (info.clan_name) {
-            user += "\nКлан: " + info.clan_name;
-        } else {
-            user += "\nКлан: -";
-        }
-        //Ранг
-        user += "\nРанг: " + info.rank_id;
-        //Общее время матчей
-        user += "\nОбщее время матчей: " + info.playtime_h + "ч " + info.playtime_m + "м";
-        //Любимый класс PvP
-        user += "\nЛюбимый класс PvP: " + classGame(info.favoritPVP);
-        //Соотн. убийств/смертей:
-        user += "\nСоотн. убийств/смертей: " + info.pvp;
-        //Побед/Поражений
-        user += "\nПобед/Поражений: " + info.pvp_wins + " / " + info.pvp_lost;
-        //Любимый класс PvE
-        user += "\nЛюбимый класс PvE: " + classGame(info.favoritPVE);
-        //Пройдено PvE
-        user += "\nПройдено PvE: " + info.pve_wins;
-        //Выводим
-        return user;
-    }
-    let link = "http://api.warface.ru/user/stat/?name=Шоколадный_Глаз&server=1";
-    let urlEnc = encodeURI(link);
-    var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+    //roleInSrv();
 
-    //Запрос с лимитом
-    request(options, function(error, response, body){
-        //Если возникла ошибка
-        if (error) {
-            console.log(error);
-            return;
+    //Если сообщение публичное
+    if (privateMsg() == false){
+        //console.log(message.member);
+        if (hasRoleId(message.member)) {
+            message.reply(`Есть права!`);
         } else {
-            //Всё хорошо
-            console.log("Всё заебись!");
-            //Если есть ответ
-            if (response) {
-                console.log("yes response");
-                console.log(response.statusCode);
-                //Проверяем содержимое
-                if (body) {
-                    console.log("yes body");
-                    //Проверяем полученное содержимое на JSON
-                    if (IsJsonString(body) == true) {
-                        //Если это JSON
-                        console.log("JSON");
-                        console.log(parseApi(body, 1));
-                    } else {
-                        //Если это не JSON
-                        console.log("не JSON");
-                    }
-                } else {
-                    console.log("no body");
-                }
-            } else {
-                console.log("no response");
-            }
+            message.reply(`Нет права!`);
         }
-    });
+
+    } else {
+        //Если личное сообщение
+        //console.log(message.author);
+        if (hasRoleId(message.author)) {
+            message.reply(`Есть права!`);
+        } else {
+            message.reply(`Нет права!`);
+        }
+    }
+
+    
+    
+    
+    //hasRoleId(message.member);
+    //console.log(idSplit[0], typeof idSplit[0]);
+    //console.log(idSplit[1], typeof idSplit[1]);
+    //console.log(idSplit[2], typeof idSplit[2]);
 }
 
 /* Информация по бойцу */
