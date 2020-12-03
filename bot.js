@@ -930,7 +930,7 @@ else if (command === "клан") {
     }
 
     //Если указали только название команды
-    if(numArg === 1 || numArg > 3) {
+    if(numArg === 1) {
         //Преобразуем номер сервера в число
         let numClSv = parseInt(clSr, 10);
         if (clNm != '' && numClSv != '') {
@@ -951,7 +951,7 @@ else if (command === "клан") {
                             //Если возникла ошибка
                             if (error) {
                                 console.log(error);
-                                message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                                message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                 return;
                             } else {
                                 //Если есть ответ
@@ -968,7 +968,7 @@ else if (command === "клан") {
                                             return;
                                         } else {
                                             //Ошибка - не JSON
-                                            message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Произошла ошибка в данных.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                                            message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Произошла ошибка в данных.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                             return;
                                         }
                                     } else {
@@ -995,13 +995,13 @@ else if (command === "клан") {
                                         //Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
                                         if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
                                             //Ошибка сервера 403+404+500
-                                            message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                                            message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                             return;
                                         }
                                     }
                                 } else {
                                     //Нет данных ответа сервера
-                                    message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                                    message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                     return;
                                 }
                             }
@@ -1043,9 +1043,10 @@ else if (command === "клан") {
     if(numArg === 3) {
         //Клан
         let cName = args[0].toLowerCase();
-        //Проверяем указанный ник
+        //Проверяем название сервера
         if (cName.length >= 4 && cName.length <= 16) {
-            //Сервер
+            //Название клана в порядке
+            //Укзанный сервер
             let cSrv = args[1].toLowerCase();
             //Номер сервера + Название сервера
             let numSrv;
@@ -1064,55 +1065,80 @@ else if (command === "клан") {
                 message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `**Неверно указан сервер.**\n\nДоступные варианты:\n\`Альфа Браво Чарли\``)).then(m => m.delete({timeout: 20000}));
                 return;
             }
-
+            //Формируем данные для запроса
+            let link = "http://api.warface.ru/rating/monthly?server="+ numSrv + "&clan=" + cName;
+            let urlEnc = encodeURI(link);
+            var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+            //Запрос
+            request(options, function(error, response, body){
+                //Если возникла ошибка
+                if (error) {
+                    console.log(error);
+                    message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                    return;
+                } else {
+                    //Если есть ответ
+                    if (response) {
+                        //Если статус запроса 200
+                        if (response.statusCode == 200) {
+                            if (IsJsonString(body) == true) {
+                                //Нашли на указанном сервере + данные в формате JSON
+                                //Фильтруем от других кланов
+                                var clan = body.filter(function(c){
+                                    return (c.clan.toLowerCase() === cName);
+                                });
+                                message.reply(EmbedMsg(':crossed_swords: Ежемесячный рейтинг клана', 0xFFF100 , parseApi(clan, numSrv)));
+                                return;
+                            } else {
+                                //Ошибка - не JSON
+                                message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Произошла ошибка в данных.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                                return;
+                            }
+                        } else {
+                            //Неверный запрос
+                            if (response.statusCode == 400) {
+                                if (IsJsonString(body) == true) {
+                                    //Что-то не так, но данные формата JSON
+                                    if (body.message === "Клан не найден") {
+                                        //Если не нашли клан
+                                        message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, 'На указанном сервере такой клан __не найден__')).then(m => m.delete({timeout: 20000}));
+                                        return;
+                                    }
+                                    if (body.message === "Ваш клан еще не набирал очков в этом месяце") {
+                                        //Если нет очков
+                                        message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, 'Клан найден на сервере **'+ nameSrv + '**\nНо еще __не набирал очков__ в этом месяце')).then(m => m.delete({timeout: 20000}));
+                                        return;
+                                    }
+                                } else {
+                                    //Ошибка - формат данных не JSON
+                                    message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Произошла ошибка в данных.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                                    return;
+                                }
+                            }
+                            //Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
+                            if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
+                                //Ошибка сервера 403+404+500
+                                message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                                return;
+                            }
+                        }
+                    } else {
+                        //Нет данных ответа сервера
+                        message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                        return;
+                    }
+                }
+            });
+        } else {
+            //Название клана не в порядке
+            message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `В указанном названии клана допущена ошибка.\n\nНазвание клана должено быть **от 4 до 16 символов**.`)).then(m => m.delete({timeout: 20000}));
+            return;
         }
     }
-
-
-    /*
-    let link = "http://api.warface.ru/rating/monthly?server=1&clan=-ДошиРаки-";
-    let urlEnc = encodeURI(link);
-    var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
-
-    //Запрос с лимитом
-    request(options, function(error, response, body){
-        //Если возникла ошибка
-        if (error) {
-            console.log(error);
-            return;
-        } else {
-            //Всё хорошо
-            console.log("Всё заебись!");
-            //Если есть ответ
-            if (response) {
-                console.log("yes response");
-                console.log(response.statusCode);
-                //Проверяем содержимое
-                if (body) {
-                    console.log("yes body");
-                    //Проверяем полученное содержимое на JSON
-                    if (IsJsonString(body) == true) {
-                        //Если это JSON
-                        console.log("JSON");
-                        //console.log(body);
-                        //Фильтруем и оставляем нужный
-                        var clan = body.filter(function(c){
-                            return (c.clan === '-ДошиРаки-');
-                        });
-                        console.log(clan);
-                    } else {
-                        //Если это не JSON
-                        console.log("не JSON");
-                    }
-                } else {
-                    console.log("no body");
-                }
-            } else {
-                console.log("no response");
-            }
-        }
-    });
-    */
+    //Если указали много параметров
+    if(numArg > 3) {
+        //
+    }
 }
 
 });
