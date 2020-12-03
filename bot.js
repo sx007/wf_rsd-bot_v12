@@ -993,7 +993,7 @@ else if (command === "клан") {
                                             }
                                         }
                                         //Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
-                                        if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
+                                        if (response.statusCode == 403 || response.statusCode == 404 || response.statusCode == 500) {
                                             //Ошибка сервера 403+404+500
                                             message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                             return;
@@ -1161,7 +1161,7 @@ else if (command === "клан") {
                                                                                         }
                                                                                     }
                                                                                     //Чарли - Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
-                                                                                    if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
+                                                                                    if (response.statusCode == 403 || response.statusCode == 404 || response.statusCode == 500) {
                                                                                         //Ошибка сервера 403+404+500
                                                                                         message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                                                                         return;
@@ -1188,7 +1188,7 @@ else if (command === "клан") {
                                                             }
                                                         }
                                                         //Браво - Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
-                                                        if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
+                                                        if (response.statusCode == 403 || response.statusCode == 404 || response.statusCode == 500) {
                                                             //Ошибка сервера 403+404+500
                                                             message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                                             return;
@@ -1215,7 +1215,7 @@ else if (command === "клан") {
                                 }
                             }
                             //Альфа - Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
-                            if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
+                            if (response.statusCode == 403 || response.statusCode == 404 || response.statusCode == 500) {
                                 //Ошибка сервера 403+404+500
                                 message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                 return;
@@ -1311,7 +1311,7 @@ else if (command === "клан") {
                                 }
                             }
                             //Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
-                            if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
+                            if (response.statusCode == 403 || response.statusCode == 404 || response.statusCode == 500) {
                                 //Ошибка сервера 403+404+500
                                 message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, `Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                 return;
