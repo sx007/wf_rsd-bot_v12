@@ -805,6 +805,129 @@ else if (command === "клан") {
         return embed;
     }
 
+    //парсинг данных с API
+    function parseApi(info, srv) {
+        var clInfo = "";
+        var data = info[0];
+        //Название клана
+        clInfo += "**Название клана:**   ``" + data.clan + "``\n";
+        //Игровой сервер
+        clInfo += "**Сервер:**   ``" + numSrvToStr(srv) + "``\n";
+        //Глава клана
+        clInfo += "**Глава клана:**   ``" + data.clan_leader + "``\n";
+        //Бойцов в клане
+        clInfo += "**Бойцов в клане:**   ``" + data.members + "``\n";
+        //Место клана -> число
+        let numRank = parseInt(data.rank, 10);
+        //Сервер Альфа
+        if (srv === 1) {
+            if (numRank <= 3000) {
+                //
+                if (numRank <= 10) {
+                    clInfo += "**Лига:**   ``Элитная``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-1)+1) + "``\n";
+                }
+                if (numRank  > 10 && numRank <= 100) {
+                    clInfo += "**Лига:**   ``Платиновая``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-10)+1) + "``\n";
+                }
+                if (numRank  > 100 && numRank <= 500) {
+                    clInfo += "**Лига:**   ``Золотая``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-100)+1) + "``\n";
+                }
+                if (numRank  > 500 && numRank <= 1000) {
+                    clInfo += "**Лига:**   ``Серебряная``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-500)+1) + "``\n";
+                }
+                if (numRank  > 1000 && numRank <= 2000) {
+                    clInfo += "**Лига:**   ``Бронзовая``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-1000)+1) + "``\n";
+                }
+                if (numRank  > 2000 && numRank <= 3000) {
+                    clInfo += "**Лига:**   ``Стальная``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-2000)+1) + "``\n";
+                }
+            } else {
+                //Если нет лиги ещё
+                clInfo += "**Лига:**   ``Без лиги``\n";
+                clInfo += "**Место:**   ``" + numRank + "``\n";
+            }
+        }
+        //Сервер Браво
+        if (srv === 2) {
+            if (numRank <= 2000) {
+                if (numRank <= 10) {
+                    clInfo += "**Лига:**   ``Элитная``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-1)+1) + "``\n";
+                }
+                if (numRank  > 10 && numRank <= 100) {
+                    clInfo += "**Лига:**   ``Платиновая``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-10)+1) + "``\n";
+                }
+                if (numRank  > 100 && numRank <= 500) {
+                    clInfo += "**Лига:**   ``Золотая``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-100)+1) + "``\n";
+                }
+                if (numRank  > 500 && numRank <= 1000) {
+                    clInfo += "**Лига:**   ``Серебряная``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-500)+1) + "``\n";
+                }
+                if (numRank  > 1000 && numRank <= 1500) {
+                    clInfo += "**Лига:**   ``Бронзовая``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-1000)+1) + "``\n";
+                }
+                if (numRank  > 1500 && numRank <= 2000) {
+                    clInfo += "**Лига:**   ``Стальная``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-1500)+1) + "``\n";
+                }
+            } else {
+                //Если нет лиги ещё
+                clInfo += "**Лига:**   ``Без лиги``\n";
+                clInfo += "**Место:**   ``" + numRank + "``\n";
+            }
+        }
+        //Сервер Чарли
+        if (srv === 3) {
+            if (numRank <= 1700) {
+                if (numRank <= 10) {
+                    clInfo += "**Лига:**   ``Элитная``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-1)+1) + "``\n";
+                }
+                if (numRank  > 10 && numRank <= 70) {
+                    clInfo += "**Лига:**   ``Платиновая``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-10)+1) + "``\n";
+                }
+                if (numRank  > 70 && numRank <= 400) {
+                    clInfo += "**Лига:**   ``Золотая``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-70)+1) + "``\n";
+                }
+                if (numRank  > 400 && numRank <= 700) {
+                    clInfo += "**Лига:**   ``Серебряная``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-400)+1) + "``\n";
+                }
+                if (numRank  > 700 && numRank <= 1200) {
+                    clInfo += "**Лига:**   ``Бронзовая``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-700)+1) + "``\n";
+                }
+                if (numRank  > 1200 && numRank <= 1700) {
+                    clInfo += "**Лига:**   ``Стальная``\n";
+                    clInfo += "**Место в лиге:**   ``" + ((numRank-1200)+1) + "``\n";
+                }
+            } else {
+                //Если нет лиги ещё
+                clInfo += "**Лига:**   ``Без лиги``\n";
+                clInfo += "**Место:**   ``" + numRank + "``\n";
+            }
+            
+        }
+        //Изменение места
+        clInfo += "**Изменение места:**   ``" + data.rank_change + "``\n";
+        //Очков за месяц
+        clInfo += "**Очков за месяц:**   ``" + data.points + "``\n";
+
+        //Выводим
+        return clInfo;
+    }
 
     //Если указали только название команды
     if(numArg === 1 || numArg > 3) {
@@ -818,9 +941,8 @@ else if (command === "клан") {
                 //Проверяем сервер - число или нет
                 if (!isNaN(numClSv)) {
                     //Сервер указан числом
-                    //Сервер указывает в диапазоне от 1 до 3
                     if (numClSv > 0 && numClSv < 4) {
-                        console.log("Сервер указан числом от 1 до 3");
+                        //Сервер указан числом от 1 до 3
                         let link = "http://api.warface.ru/rating/monthly?server="+ numClSv + "&clan=" + clNm;
                         let urlEnc = encodeURI(link);
                         var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
@@ -829,65 +951,57 @@ else if (command === "клан") {
                             //Если возникла ошибка
                             if (error) {
                                 console.log(error);
+                                message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                 return;
                             } else {
-                                //Всё хорошо
-                                console.log("Всё заебись!");
                                 //Если есть ответ
                                 if (response) {
-                                    console.log("yes response");
-                                    console.log(response.statusCode);
                                     //Если статус запроса 200
                                     if (response.statusCode == 200) {
                                         if (IsJsonString(body) == true) {
-                                            console.log("Нашли на указанном сервере");
-                                            //Если это JSON
-                                            console.log("JSON");
+                                            //Нашли на указанном сервере + данные в формате JSON
                                             //Фильтруем от других кланов
                                             var clan = body.filter(function(c){
                                                 return (c.clan === clNm);
                                             });
-                                            console.log(clan);
-                                            //message.reply(EmbedMsg(':bar_chart: Статистика по бойцу', 0x02A5D0 , parseApi(data, numSrv)));
+                                            message.reply(EmbedMsg(':crossed_swords: Ежемесячный рейтинг клана', 0xFFF100 , parseApi(clan, numClSv)));
                                             return;
                                         } else {
-                                            //Ошибка
-                                            console.log("не JSON");
+                                            //Ошибка - не JSON
+                                            message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Произошла ошибка в данных.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                             return;
                                         }
                                     } else {
                                         //Неверный запрос
                                         if (response.statusCode == 400) {
                                             if (IsJsonString(body) == true) {
-                                                console.log("Что-то не так");
-                                                console.log("JSON");
+                                                //Что-то не так, но данные формата JSON
                                                 if (body.message === "Клан не найден") {
                                                     //Если не нашли клан
-                                                    console.log("Наш клан не найден");
-                                                    //message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, 'Наш клан __не найден__')).then(m => m.delete({timeout: 20000}));
+                                                    message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, 'Наш клан __не найден__')).then(m => m.delete({timeout: 20000}));
                                                     return;
                                                 }
                                                 if (body.message === "Ваш клан еще не набирал очков в этом месяце") {
                                                     //Если нет очков
-                                                    console.log("Наш клан еще не набирал очков");
-                                                    //message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, 'Наш клан еще __не набирал очков__ в этом месяце')).then(m => m.delete({timeout: 20000}));
+                                                    message.reply(EmbedMsg(':no_entry_sign: Ошибка', 0xFFF100, 'Наш клан еще __не набирал очков__ в этом месяце')).then(m => m.delete({timeout: 20000}));
                                                     return;
                                                 }
                                             } else {
-                                                //Ошибка
-                                                console.log("не JSON");
+                                                //Ошибка - формат данных не JSON
+                                                message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Произошла ошибка в данных.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                                 return;
                                             }
                                         }
                                         //Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
                                         if (res.statusCode == 403 || res.statusCode == 404 || res.statusCode == 500) {
-                                            console.log("403+404+500");
-                                            //message.reply(EmbedMsg(':no_entry_sign: Ошибка',0x02A5D0,`Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
+                                            //Ошибка сервера 403+404+500
+                                            message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                             return;
                                         }
                                     }
                                 } else {
-                                    console.log("no response");
+                                    //Нет данных ответа сервера
+                                    message.reply(EmbedMsg(':no_entry_sign: Ошибка',0xFFF100,`Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`)).then(m => m.delete({timeout: 20000}));
                                     return;
                                 }
                             }
