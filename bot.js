@@ -119,7 +119,7 @@ if (message.content.includes('discord.gg/') ||  message.content.includes('discor
     //Если сообщение публичное
     if (privateMsg() == false){
         //Если сообщение от Администратора или Модератора, то разрешаем
-        if(!hasRole(message.member, "Администратор") && !hasRole(message.member, "Модераторы")){
+        if(!hasRoleId(message.member)){
             //Удаляем сообщение
             message.delete();
             //Отправляем в личку сообщение пользователю
@@ -127,8 +127,6 @@ if (message.content.includes('discord.gg/') ||  message.content.includes('discor
         }
     }
 }
-
-
 
 //Проверка на наличие префикса в начале сообщения
 if (!message.content.startsWith(prefix)) return;
@@ -146,18 +144,26 @@ if (command === "ping") {
     //Если сообщение публичное
     if (privateMsg() == false){
         //Если публичное сообщение
-        message.reply(`Публичное сообщение`);
-        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
+        //message.reply(`Публичное сообщение`);
+        if (hasRoleId(message.member)){
             //И есть права необходимые
-            message.reply(`У тебя есть права`);
-            message.reply(`Pong! Время генерации сообщения ${timeTaken}ms.`);
+            //message.reply(`У тебя есть права`);
+            message.reply(`Время генерации сообщения ${timeTaken}ms.`);
         } else {
             //Если нет таких прав
-            message.reply(`У тебя нет прав`);
+            message.reply(`У тебя нет прав для данной команды`);
         }
     } else {
         //Если личное сообщение
-        message.reply(`Личное сообщение`);
+        //message.reply(`Личное сообщение`);
+        if (hasRoleId(message.author)){
+            //И есть права необходимые
+            //message.reply(`У тебя есть права`);
+            message.reply(`Время генерации сообщения ${timeTaken}ms.`);
+        } else {
+            //Если нет таких прав
+            message.reply(`У тебя нет прав для данной команды`);
+        }
     }
 }
 
@@ -227,7 +233,7 @@ else if (command === "удалить") {
     //Проверяем куда была отправленна данная команда
     if (privateMsg() == false){
         //публично
-        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
+        if (hasRoleId(message.member)){
             //И есть права необходимые
             if(numArg >= 3){
                 message.channel.send(`:exclamation: Ты указал много аргументов.\nИспользуй команду: \`${prefix}удалить (количество сообщений)\``);
@@ -287,7 +293,7 @@ else if (command === "кик") {
             return;
         };
         //Проверяем права на доступ к данной команде
-        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
+        if (hasRoleId(message.member)){
             if(numArg === 1) {
                 //Если указали только название команды
                 message.reply(`:exclamation: Неверно указана команда.\nИспользуй: \`${prefix}кик @Ник Причина_кика\``).then(m => m.delete({timeout: 20000}));
@@ -304,7 +310,7 @@ else if (command === "кик") {
                 return;
             }
             //Проверяем Администратор или Модератор 
-            if (hasRole(user, "Администратор") || hasRole(user, "Модераторы")){
+            if (hasRoleId(user)){
                 message.reply(`\n:no_entry_sign: Нельзя кикнуть пользователя с правами **Администратор** или **Модераторы**!`).then(m => m.delete({timeout: 15000}));
                 return;
             }
@@ -359,7 +365,7 @@ else if (command === "бан") {
             return;
         };
         //Проверяем права на доступ к данной команде
-        if (hasRole(message.member, "Администратор") || hasRole(message.member, "Модераторы")){
+        if (hasRoleId(message.member)){
             if(numArg === 1) {
                 //Если указали только название команды
                 message.reply(`:exclamation: Неверно указана команда.\nИспользуй: \`${prefix}бан @Ник Причина_бана\``).then(m => m.delete({timeout: 20000}));
@@ -376,7 +382,7 @@ else if (command === "бан") {
                 return;
             }
             //Проверяем Администратор или Модератор 
-            if (hasRole(user, "Администратор") || hasRole(user, "Модераторы")){
+            if (hasRoleId(user)){
                 message.reply(`\n:no_entry_sign: Нельзя забанить пользователя с правами **Администратор** или **Модераторы**!`).then(m => m.delete({timeout: 15000}));
                 return;
             }
