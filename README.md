@@ -8,7 +8,7 @@
 <a href="https://www.npmjs.com/package/request"><img src="https://img.shields.io/badge/Request-2.88.2-yellow.svg" alt="Request"></a>
 <a href="https://github.com/sx007/wf_rsd-bot_v12/blob/master/changelog.md"><img src="https://img.shields.io/badge/Version-12.2020.12.04-brightgreen.svg" alt="Version"></a>
 <a href="https://discord.gg/PR57GzV"><img src="https://discordapp.com/api/guilds/307431674671792129/widget.png" alt="Discord server"></a>
-<a href="https://discord.gg/PR57GzV"><img src="https://img.shields.io/badge/license-CC%20BY-%23373737" alt="Creative Commons Attribution"></a>
+<a href="https://creativecommons.org/licenses/by/4.0/deed.ru"><img src="https://img.shields.io/badge/license-CC%20BY-%23373737" alt="Creative Commons Attribution"></a>
 </p>
 
 ## Внимание
