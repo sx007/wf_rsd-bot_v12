@@ -144,10 +144,8 @@ if (command === "ping") {
     //Если сообщение публичное
     if (privateMsg() == false){
         //Если публичное сообщение
-        //message.reply(`Публичное сообщение`);
         if (hasRoleId(message.member)){
             //И есть права необходимые
-            //message.reply(`У тебя есть права`);
             message.reply(`Время генерации сообщения ${timeTaken}ms.`);
         } else {
             //Если нет таких прав
@@ -155,10 +153,8 @@ if (command === "ping") {
         }
     } else {
         //Если личное сообщение
-        //message.reply(`Личное сообщение`);
         if (hasRoleId(message.author)){
             //И есть права необходимые
-            //message.reply(`У тебя есть права`);
             message.reply(`Время генерации сообщения ${timeTaken}ms.`);
         } else {
             //Если нет таких прав
@@ -424,8 +420,6 @@ else if (command === "бан") {
 }
 
 else if (command === "0") {
-    //roleInSrv();
-
     //Если сообщение публичное
     if (privateMsg() == false){
         //console.log(message.member);
@@ -444,14 +438,6 @@ else if (command === "0") {
             message.reply(`Нет права!`);
         }
     }
-
-    
-    
-    
-    //hasRoleId(message.member);
-    //console.log(idSplit[0], typeof idSplit[0]);
-    //console.log(idSplit[1], typeof idSplit[1]);
-    //console.log(idSplit[2], typeof idSplit[2]);
 }
 
 /* Информация по бойцу */
@@ -1568,7 +1554,7 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                     } else {
                         newNick = 'По умолчанию';
                     }
-                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n${oldNick}\n**Новый ник:**\n\`${newNick}\`\n\nКто сменил:\n<@${userID}>`;
+                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n\`${oldNick}\`\n**Новый ник:**\n\`${newNick}\`\n\nКто сменил:\n<@${userID}>`;
                     //Отправляем сообщение
                     sysCh.send(EmbedMsg(':repeat: **[ИЗМЕНЕН СЕРВЕРНЫЙ НИК]**', 0x50E3C2, info));
                 })
