@@ -419,21 +419,43 @@ else if (command === "бан") {
     }
 }
 
-else if (command === "0") {
+else if (command === "команды") {
+    //Заготовка для Embed сообщения
+    function EmbedMsg(title, color, Descr){
+        let embed = new Discord.MessageEmbed()
+        .setTitle(title)
+        .setColor(color)
+        .setDescription(Descr)
+        .setFooter("Бот клана", "")
+        .setTimestamp()
+        return embed;
+    }
+    //Получаем ID владельца сервера
+    const ownerSrvID = bot.guilds.cache.map(guild => guild.ownerID).join("\n");
     //Если сообщение публичное
     if (privateMsg() == false){
-        //console.log(message.member);
+        //Если публичное сообщение
         if (hasRoleId(message.member)) {
-            message.reply(`Есть права!`);
+            //Проверяем на права владельца сервера
+            if (message.member.id === ownerSrvID) {
+                //Если права есть
+                message.reply(EmbedMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}ping\` узнать время генерации сообщения\n\`${prefix}sum\` узнать количество агрументов в сообщении\n\`${prefix}rs\` перезагрузить бота\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}lol\` получение аргументов и отдельно 1 и 2\n\`${prefix}удалить\` позволяет удалить N-количество сообщений в текстовом канале\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
+            } else {
+                //Если нет
+            }
         } else {
             message.reply(`Нет права!`);
         }
-
     } else {
         //Если личное сообщение
-        //console.log(message.author);
         if (hasRoleId(message.author)) {
-            message.reply(`Есть права!`);
+            //Проверяем на права владельца сервера
+            if (message.author.id === ownerSrvID) {
+                //Если права есть
+                message.reply(EmbedMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}ping\` узнать время генерации сообщения\n\`${prefix}sum\` узнать количество агрументов в сообщении\n\`${prefix}rs\` перезагрузить бота\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}lol\` получение аргументов и отдельно 1 и 2\n\`${prefix}удалить\` позволяет удалить N-количество сообщений в текстовом канале\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
+            } else {
+                //Если нет
+            }
         } else {
             message.reply(`Нет права!`);
         }
