@@ -15,7 +15,7 @@
   "engines": {
     "node": "12.x"
   },
-  "license": "MIT",
+  "license": "CC BY",
   "keywords": [
     "node",
     "discord",
