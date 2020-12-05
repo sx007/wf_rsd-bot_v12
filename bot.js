@@ -110,7 +110,6 @@ bot.on("message", function(message) {
                             result = true;
                         }
                     }
-                    
                 }
             }
         });
@@ -175,7 +174,6 @@ bot.on("message", function(message) {
     if (command === "ping") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            console.log("Справка по команде");
             message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
             return;
         }
@@ -203,11 +201,21 @@ bot.on("message", function(message) {
     }
 
     else if (command === "sum") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         message.reply(`Количество аргуметов: ${numArg}!`);
     }
 
     /* Команда перезагрузки бота */
     else if (command === "rs") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         //Получаем ID владельца сервера
         const ownerSrvID = bot.guilds.cache.map(guild => guild.ownerID).join("\n");
         //Функция перезапуска
@@ -241,6 +249,11 @@ bot.on("message", function(message) {
 
     /* Подбросить монетку */
     else if (command === "монетка") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         //Вычисляем случайное число от 1 до 3
         var random = Math.floor(Math.random() * 4) + 1;
         if (random === 1) {
@@ -256,6 +269,11 @@ bot.on("message", function(message) {
     }
 
     else if (command === "lol") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         const nArg = numArg-2;
         message.reply("Всего аргрументов: " + nArg + " Последний аргумент: " + args[nArg] + "!");
         message.reply("Нулевой агрумент: " + args[0]);
@@ -265,6 +283,11 @@ bot.on("message", function(message) {
 
     /* Удаление сообщений */
     else if (command === "удалить") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         //Проверяем куда была отправленна данная команда
         if (privateMsg() == false){
             //публично
@@ -316,6 +339,11 @@ bot.on("message", function(message) {
 
     /* Выгнать пользователя с сервера */
     else if (command === "кик") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         //Название сервера
         const nameSrv = bot.guilds.cache.map(guild => guild.name).join("\n");
         //Проверяем куда была отправленна данная команда
@@ -381,6 +409,11 @@ bot.on("message", function(message) {
 
     /* Забанить пользователя на сервере */
     else if (command === "бан") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         //Название сервера
         const nameSrv = bot.guilds.cache.map(guild => guild.name).join("\n");
         //Проверяем куда была отправленна данная команда
@@ -445,6 +478,11 @@ bot.on("message", function(message) {
     }
 
     else if (command === "команды") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         //Получаем ID владельца сервера
         const ownerSrvID = bot.guilds.cache.map(guild => guild.ownerID).join("\n");
         //Если сообщение публичное
@@ -480,6 +518,11 @@ bot.on("message", function(message) {
 
     /* Информация по бойцу */
     else if (command === "боец") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         //парсинг данных с API
         function parseApi(info, srv) {
             //Класс в игре
@@ -770,6 +813,11 @@ bot.on("message", function(message) {
 
     /* Команда Клан */
     else if (command === "клан") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            return;
+        }
         //парсинг данных с API
         function parseApi(info, srv) {
             var clInfo = "";
