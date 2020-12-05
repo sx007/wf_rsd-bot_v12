@@ -11,7 +11,7 @@
 <a href="https://creativecommons.org/licenses/by/4.0/deed.ru"><img src="https://img.shields.io/badge/license-CC%20BY-%23373737" alt="Creative Commons Attribution"></a>
 </p>
 
-Проект ещё дорабатывается.
+Проект в стадии разработки.
 ======
 
 ## Вступление:
