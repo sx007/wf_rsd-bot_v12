@@ -9,7 +9,7 @@
 | --- | --- |
 | Версия бота | <a href="https://github.com/sx007/wf_rsd-bot_v12/blob/master/changelog.md"><img src="https://img.shields.io/badge/dynamic/json?color=brightgreen&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/main/package.json&query=$.version&label=Version" alt="Version"></a> |
 | Библиотека | <a href="http://nodejs.org"><img src="https://img.shields.io/badge/Node.js-12.x-red.svg" alt="Node JS"></a> |
-| Библиотека | <a href="http://nodejs.org"><img src="<a href="http://nodejs.org"><img src="https://img.shields.io/badge/dynamic/json?color=red&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v11/master/package.json&query=$.engines.node&label=Node.js" alt="Node.js"></a>" alt="Node JS"></a> |
+| Библиотека | <a href="http://nodejs.org"><img src="<a href="http://nodejs.org"><img src="https://img.shields.io/badge/dynamic/json?color=red&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/master/package.json&query=$.engines.node&label=Node.js" alt="Node.js"></a>" alt="Node JS"></a> |
 
 | Библиотека | <a href="https://discord.js.org"><img src="https://img.shields.io/badge/Discord.js-12.5.0-orange.svg" alt="Discord.js"></a> |
 | Библиотека | <a href="https://www.npmjs.com/package/request"><img src="https://img.shields.io/badge/Request-2.88.2-yellow.svg" alt="Request"></a> |
