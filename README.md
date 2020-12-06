@@ -11,7 +11,7 @@
 | Библиотека | <a href="http://nodejs.org"><img src="https://img.shields.io/badge/dynamic/json?color=red&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/master/package.json&query=$.engines.node&label=Node.js" alt="Node.js"></a> |
 | Библиотека | <a href="http://nodejs.org"><img src="https://img.shields.io/badge/dynamic/json?color=orange&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/master/package.json&query=$.dependencies[%22discord.js%22]&label=Discord.js" alt="Discord.js"></a> |
 | Библиотека | <a href="http://nodejs.org"><img src="https://img.shields.io/badge/dynamic/json?color=yellow&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/master/package.json&query=$.dependencies.request&label=Request" alt="Request"></a> |
-| Лицензия | <a href="https://creativecommons.org/licenses/by/4.0/deed.ru"><img src="https://img.shields.io/badge/dynamic/json?color=%23373737&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/master/package.json&query=.license&label=License" alt="License"></a> |
+| Лицензия | <a href="https://creativecommons.org/licenses/by/4.0/deed.ru"><img src="https://img.shields.io/badge/dynamic/json?color=%23373737&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/master/package.json&query=$.license&label=License" alt="License"></a> |
 
 
 # Про бота
