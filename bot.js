@@ -169,12 +169,50 @@ bot.on("message", function(message) {
     const numArg = numArgs.length;
     const command = args.shift().toLowerCase();
 
-
-    //Если отправлена команда ping
-    if (command === "ping") {
+    if (command === "команды") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПоказывает краткую информацию доступных для вас команд.\n\n**Пример набора команды**```\n!команды```', 'https://i.imgur.com/h2sueFM.gif'));
+            return;
+        }
+        //Получаем ID владельца сервера
+        const ownerSrvID = bot.guilds.cache.map(guild => guild.ownerID).join("\n");
+        //Если сообщение публичное
+        if (privateMsg() == false){
+            //Если публичное сообщение
+            if (hasRoleId(message.member)) {
+                //Проверяем на права владельца сервера
+                if (message.member.id === ownerSrvID) {
+                    //Если права есть
+                    message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}rs\` перезагрузить бота\n\`${prefix}ping\` узнать время генерации сообщения\n\`${prefix}удалить\` позволяет удалить N-количество сообщений в текстовом канале\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
+                } else {
+                    //Если нет
+                    message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере`));
+                }
+            } else {
+                message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
+            }
+        } else {
+            //Если личное сообщение
+            if (hasRoleId(message.author)) {
+                //Проверяем на права владельца сервера
+                if (message.author.id === ownerSrvID) {
+                    //Если права есть
+                    message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}rs\` перезагрузить бота\n\`${prefix}ping\` узнать время генерации сообщения\n\`${prefix}удалить\` позволяет удалить N-количество сообщений в текстовом канале\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
+                } else {
+                    message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере`));
+                }
+            } else {
+                message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
+            }
+        }
+    }
+
+    //Если отправлена команда ping
+    else if (command === "ping") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nДанная команда позволяет узнать время генерации сообщения.\n\n**Пример набора команды**```\n!ping```', 'https://i.imgur.com/DdqIw0Z.gif'));
             return;
         }
         const timeTaken = Date.now() - message.createdTimestamp;
@@ -200,20 +238,11 @@ bot.on("message", function(message) {
         }
     }
 
-    else if (command === "sum") {
-        if(numArg === 2 && args[0] === "?") {
-            //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
-            return;
-        }
-        message.reply(`Количество аргуметов: ${numArg}!`);
-    }
-
     /* Команда перезагрузки бота */
     else if (command === "rs") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nДанная команда позволяет перезагрузить бота дистанционно.\n\n**Пример набора команды**```\n!rs```', 'https://i.imgur.com/iHZWyZA.gif'));
             return;
         }
         //Получаем ID владельца сервера
@@ -251,7 +280,7 @@ bot.on("message", function(message) {
     else if (command === "монетка") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nВыдаёт случайный результат подброса монетки.\nОрёл, решка или упала на ребро.\n\n**Пример набора команды**```\n!монетка```', 'https://i.imgur.com/zaQC0LS.gif'));
             return;
         }
         //Вычисляем случайное число от 1 до 3
@@ -268,24 +297,11 @@ bot.on("message", function(message) {
         }
     }
 
-    else if (command === "lol") {
-        if(numArg === 2 && args[0] === "?") {
-            //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
-            return;
-        }
-        const nArg = numArg-2;
-        message.reply("Всего аргрументов: " + nArg + " Последний аргумент: " + args[nArg] + "!");
-        message.reply("Нулевой агрумент: " + args[0]);
-        message.reply("Первый агрумент: " + args[1]);
-        //message.reply(`Последний аргумент: ${lastArg} и ${args}!`);
-    }
-
     /* Удаление сообщений */
     else if (command === "удалить") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
             return;
         }
         //Проверяем куда была отправленна данная команда
@@ -341,7 +357,7 @@ bot.on("message", function(message) {
     else if (command === "кик") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
             return;
         }
         //Название сервера
@@ -411,7 +427,7 @@ bot.on("message", function(message) {
     else if (command === "бан") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
             return;
         }
         //Название сервера
@@ -477,50 +493,11 @@ bot.on("message", function(message) {
         }
     }
 
-    else if (command === "команды") {
-        if(numArg === 2 && args[0] === "?") {
-            //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
-            return;
-        }
-        //Получаем ID владельца сервера
-        const ownerSrvID = bot.guilds.cache.map(guild => guild.ownerID).join("\n");
-        //Если сообщение публичное
-        if (privateMsg() == false){
-            //Если публичное сообщение
-            if (hasRoleId(message.member)) {
-                //Проверяем на права владельца сервера
-                if (message.member.id === ownerSrvID) {
-                    //Если права есть
-                    message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}rs\` перезагрузить бота\n\`${prefix}ping\` узнать время генерации сообщения\n\`${prefix}sum\` узнать количество агрументов в сообщении\n\`${prefix}lol\` получение аргументов и отдельно 1 и 2\n\`${prefix}удалить\` позволяет удалить N-количество сообщений в текстовом канале\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
-                } else {
-                    //Если нет
-                    message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере`));
-                }
-            } else {
-                message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
-            }
-        } else {
-            //Если личное сообщение
-            if (hasRoleId(message.author)) {
-                //Проверяем на права владельца сервера
-                if (message.author.id === ownerSrvID) {
-                    //Если права есть
-                    message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}rs\` перезагрузить бота\n\`${prefix}ping\` узнать время генерации сообщения\n\`${prefix}sum\` узнать количество агрументов в сообщении\n\`${prefix}lol\` получение аргументов и отдельно 1 и 2\n\`${prefix}удалить\` позволяет удалить N-количество сообщений в текстовом канале\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
-                } else {
-                    message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана\n\`${prefix}кик\` позволяет выгналь пользователя с сервера\n\`${prefix}бан\` позволяет забанить пользователя на сервере`));
-                }
-            } else {
-                message.reply(EmbMsg(':information_source: СПИСОК КОМАНД',0x7ED321,`\n\`${prefix}команды\` отобразить список всех доступных команд\n\`${prefix}монетка\` случайный результат подброса монетки\n\`${prefix}боец\` получить игровую статистику о бойце\n\`${prefix}клан\` получить информацию о ежемесячном рейтинге клана`));
-            }
-        }
-    }
-
     /* Информация по бойцу */
     else if (command === "боец") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
             return;
         }
         //парсинг данных с API
@@ -815,7 +792,7 @@ bot.on("message", function(message) {
     else if (command === "клан") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp('СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
             return;
         }
         //парсинг данных с API
