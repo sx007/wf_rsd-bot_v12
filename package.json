@@ -1,6 +1,6 @@
 {
   "name": "wf_rsd-bot-v12",
-  "version": "12.2020.12.06",
+  "version": "12.2020.12.07",
   "description": "Bot for clan.",
   "main": "bot.js",
   "scripts": {
