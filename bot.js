@@ -172,7 +172,7 @@ bot.on("message", function(message) {
     if (command === "команды") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПоказывает краткую информацию доступных для вас команд.\n\n**Пример набора команды**```\n!команды```', 'https://i.imgur.com/h2sueFM.gif'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nПоказывает краткую информацию доступных для вас команд.\n\n**Пример набора команды**\n\`\`\`${prefix}${command}\`\`\``, 'https://i.imgur.com/h2sueFM.gif'));
             return;
         }
         //Получаем ID владельца сервера
@@ -212,7 +212,7 @@ bot.on("message", function(message) {
     else if (command === "ping") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nДанная команда позволяет узнать время генерации сообщения.\n\n**Пример набора команды**```\n!ping```', 'https://i.imgur.com/DdqIw0Z.gif'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nДанная команда позволяет узнать время генерации сообщения.\n\n**Пример набора команды**\n\`\`\`${prefix}${command}\`\`\``, 'https://i.imgur.com/DdqIw0Z.gif'));
             return;
         }
         const timeTaken = Date.now() - message.createdTimestamp;
@@ -242,7 +242,7 @@ bot.on("message", function(message) {
     else if (command === "rs") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nДанная команда позволяет перезагрузить бота дистанционно.\n\n**Пример набора команды**```\n!rs```', 'https://i.imgur.com/iHZWyZA.gif'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nДанная команда позволяет перезагрузить бота дистанционно.\n\n**Пример набора команды**\n\`\`\`${prefix}${command}\`\`\``, 'https://i.imgur.com/iHZWyZA.gif'));
             return;
         }
         //Получаем ID владельца сервера
@@ -280,7 +280,7 @@ bot.on("message", function(message) {
     else if (command === "монетка") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nВыдаёт случайный результат подброса монетки.\nОрёл, решка или упала на ребро.\n\n**Пример набора команды**```\n!монетка```', 'https://i.imgur.com/zaQC0LS.gif'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nВыдаёт случайный результат подброса монетки.\n\nВарианты:\nОрёл, решка или упала на ребро.\n\n**Пример набора команды**\n\`\`\`${prefix}${command}\`\`\``, 'https://i.imgur.com/zaQC0LS.gif'));
             return;
         }
         //Вычисляем случайное число от 1 до 3
@@ -301,7 +301,7 @@ bot.on("message", function(message) {
     else if (command === "удалить") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nПозволяет удалить n-число сообщений в текстовом канале.\n\n**Пример набора команды**\n\`\`\`${prefix}${command} n\`\`\``, 'https://i.imgur.com/FEuW1U5.gif'));
             return;
         }
         //Проверяем куда была отправленна данная команда
@@ -357,7 +357,7 @@ bot.on("message", function(message) {
     else if (command === "кик") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nПозволяет выгнать (кикнуть) пользоваеля с сервера.\n\nУказываем пользователя через знак @\nЧерез пробел можно указать причину кика с сервера.\n\n**Пример набора команды**\n\`\`\`${prefix}${command} @пользователь причина\`\`\``, 'https://i.imgur.com/87RRitG.gif'));
             return;
         }
         //Название сервера
@@ -427,7 +427,7 @@ bot.on("message", function(message) {
     else if (command === "бан") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nПозволяет забанить пользоваеля на сервере.\n\nУказываем пользователя через знак @\nЧерез пробел можно указать причину бана.\n\n**Пример набора команды**\n\`\`\`${prefix}${command} @пользователь Причина\`\`\``, 'https://i.imgur.com/EvOKwro.gif'));
             return;
         }
         //Название сервера
@@ -497,7 +497,7 @@ bot.on("message", function(message) {
     else if (command === "боец") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nПозволяет получить игровую статистику по бойцу.\n\nУкажите ник бойца, через пробел сервер на котором искать: **Альфа Браво Чарли**\n\nЕсли сервер не будет указан, то поиск будет производится на всех трёх серверах.\n\n**Пример набора команды**\n\`\`\`${prefix}${command} НикБойца Сервер\`\`\``, 'https://i.imgur.com/N1CZPZM.gif'));
             return;
         }
         //парсинг данных с API
@@ -792,7 +792,7 @@ bot.on("message", function(message) {
     else if (command === "клан") {
         if(numArg === 2 && args[0] === "?") {
             //Выдаём справку по данной команде
-            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, '\nПодробное описание к данной команде', 'https://cdn.discordapp.com/embed/avatars/1.png'));
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nПозволяет получить информацию о клане в ежемесячном рейтинге.\n\nЧтобы получить информацию о нашем клане, достаточно набрать команду\n\`\`\`${prefix}${command}\`\`\`\nЧтобы получить информацю по другому клану, укажите название клана и через пробел сервер на котором искать: **Альфа Браво Чарли**\n\nЕсли сервер не будет указан, то поиск будет производится на всех трёх серверах.\n\n**Пример набора команды**\n\`\`\`${prefix}${command} НазваниеКлана Сервер\`\`\``, 'https://i.imgur.com/fE7XPTZ.gif'));
             return;
         }
         //парсинг данных с API
