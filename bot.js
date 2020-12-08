@@ -17,6 +17,8 @@ const clNm = process.env.CLAN_NAME;
 const clSr = process.env.CLAN_SRV;
 //ID ролей (Администраторов и Модераторов)
 const idAdmMod = process.env.ID_ADM_MOD_ROLE;
+//Время старта бота
+const startBot = Date.now();
 
 /* Вывод сообщения о работе и готовности бота */
 bot.on('ready', () => { 
@@ -294,6 +296,59 @@ bot.on("message", function(message) {
         } else if (random === 3) { 
             //Если число = 3, то монета падает ребром.
             message.channel.send(':last_quarter_moon: Монета упала ребром!');
+        }
+    }
+
+    /* Подбросить монетку */
+    else if (command === "бот") {
+        if(numArg === 2 && args[0] === "?") {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsgHelp(':information_source: СПРАВКА ПО КОМАНДЕ', 0x7ED321, `\nВыдаёт информацию о данном боте.\n\n**Пример набора команды**\n\`\`\`${prefix}${command}\`\`\``, 'https://i.imgur.com/zaQC0LS.gif'));
+            return;
+        }
+        if(numArg === 1) {
+            //id Автора бота
+            const autorID = '307427459450798080';
+            const infoSrv = bot.guilds.cache;
+            //Кол-во пользователей
+            const memCount = infoSrv.map(guild => guild.memberCount).join("\n");
+            //Получаем содержимое package.json
+            let json = require(__dirname + '/package.json');
+            function msToTime(millis) {
+                var weeks, days, hours, minutes, seconds, total_hours, total_minutes, total_seconds;
+                var totalT = '';
+                total_seconds = parseInt(Math.floor(millis / 1000));
+                total_minutes = parseInt(Math.floor(total_seconds / 60));
+                total_hours = parseInt(Math.floor(total_minutes / 60));
+                seconds = parseInt(total_seconds % 60);
+                minutes = parseInt(total_minutes % 60);
+                hours = parseInt(total_hours % 24);
+                days = parseInt(Math.floor(total_hours / 24));
+                weeks = parseInt(Math.floor(days / 7));
+                if (weeks > 0) {
+                    totalT += weeks + "нед ";
+                }
+                if (days > 0) {
+                    totalT += days + "д ";
+                }
+                if (hours > 0) {
+                    totalT += hours + "ч ";
+                }
+                if (minutes > 0) {
+                    totalT += minutes + "м ";
+                }
+                if (seconds > 0) {
+                    totalT += seconds + "с";
+                }
+                return totalT;
+            }
+            var timeOnline = Date.now()-startBot;
+            message.reply(EmbMsg(':robot: О БОТЕ', 0x82E9FF, `\n**Версия бота: **${json.version}\n**Автор бота:**\n<@${autorID}>\n\n**Работает в сети:**\n${msToTime(timeOnline)}\n\n**Пользователей на сервере: **${memCount}`));
+        }
+        if(numArg > 2) {
+            //Выдаём справку по данной команде
+            message.reply(EmbMsg(':no_entry_sign: Ошибка', 0x82E9FF, `\nДопущена ошибка при вводе команды.\n\n**Пример набора команды**\n\`\`\`${prefix}${command}\`\`\``));
+            return;
         }
     }
 
