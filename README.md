@@ -14,6 +14,16 @@
 ^^| <a href="https://www.npmjs.com/package/express"><img src="https://img.shields.io/badge/dynamic/json?color=blue&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/master/package.json&query=$.dependencies.express&label=Express" alt="Express"></a> |
 | Лицензия | <a href="https://creativecommons.org/licenses/by/4.0/deed.ru"><img src="https://img.shields.io/badge/dynamic/json?color=%23373737&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/master/package.json&query=$.license&label=License" alt="License"></a> |
 
+| :        Fruits \|\| Food       : |||
+| :--------- | :-------- | :--------  |
+| Apple      | : Apple : | Apple      \
+| Banana     |   Banana  | Banana     \
+| Orange     |   Orange  | Orange     |
+| :   Rowspan is 4    : || How's it?  |
+|^^    A. Peach         ||   1. Fine :|
+|^^    B. Orange        ||^^ 2. Bad   |
+|^^    C. Banana        ||  It's OK!  |
+
 
 # Про бота
 > Данный бот изначально был создан для ведения статистики по серверу Discord клана. 
