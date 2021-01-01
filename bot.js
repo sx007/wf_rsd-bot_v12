@@ -219,7 +219,7 @@ bot.on("message", function(message) {
         }
         if(numArg === 1) {
             //Отправляем ссылку на группу
-            message.reply(EmbMsg(':no_entry_sign: Ошибка', 0x2B71FF, `\nВступайте в нашу группу в социальной сети ВКонтакте:\n\n[Наша группа в ВК](https://vk.com/wf_rsd)`));
+            message.reply(EmbMsg(':no_entry_sign: Ошибка', 0x2B71FF, `\nВступайте в нашу группу в социальной сети ВКонтакте:\n[Наша группа в ВК](https://vk.com/wf_rsd)`));
             return;
         }
         if(numArg > 2) {
