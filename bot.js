@@ -1407,7 +1407,7 @@ bot.on("message", function(message) {
             return ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'].includes(reaction.emoji.name) && user.id === message.author.id;
         };
 
-        message.reply(EmbMsg(':star: Гороскоп :star:', 0xAF6160, `Укажите знак задиака, нажав на соответсвующую реакцию под данным сообщением.\n\n♈ - Овен\n♉ - Телец\n♊ - Близнецы\n♋ - Рак\n♌ - Лев\n♍ - Дева\n♎ - Весы\n♏ - Скорпион\n♐ - Стрелец\n♑ - Козерог\n♒ - Водолей\n♓ - Рыбы\n\nДождитесь появления всех 12 реакций`))
+        message.reply(EmbMsg(':star: Гороскоп :star:', 0xAF6160, `Укажите знак задиака, нажав на соответсвующую реакцию под данным сообщением.\n\n♈ - Овен\n♉ - Телец\n♊ - Близнецы\n♋ - Рак\n♌ - Лев\n♍ - Дева\n♎ - Весы\n♏ - Скорпион\n♐ - Стрелец\n♑ - Козерог\n♒ - Водолей\n♓ - Рыбы\n\nДождитесь появления всех 12 реакций\n`))
         .then(msg => {
             msg.react('♈') //Овен
             msg.react('♉') //Телец
@@ -1425,7 +1425,9 @@ bot.on("message", function(message) {
             .then((collected) => {
                 const reaction = collected.first();
                 if (reaction.emoji.name === '♈') {
-                    message.reply('Выбрано - Овен');
+                    var info = EmbMsg(':star: Гороскоп :star:', 0xAF6160, `Указали знак - Овен\n`);
+                    msg.reactions.removeAll().catch(error => console.error('Ошибка при очистке реакций: ', error));
+                    msg.edit(info);
                 }
                 if (reaction.emoji.name === '♉') {
                     message.reply('Выбрано - Телец');
