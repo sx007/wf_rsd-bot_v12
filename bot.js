@@ -1401,6 +1401,72 @@ bot.on("message", function(message) {
         }
     }
 
+    /* Команда гороскоп */
+    else if (command === "0") {
+        const filter = (reaction, user) => {
+            return ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'].includes(reaction.emoji.name) && user.id === message.author.id;
+        };
+
+        message.reply(EmbMsg(':star: Гороскоп :star:', 0xAF6160, `Укажите знак задиака, нажав на соответсвующую реакцию под данным сообщением.\n\n♈ - Овен\n♉ - Телец\n♊ - Близнецы\n♋ - Рак\n♌ - Лев\n♍ - Дева\n♎ - Весы\n♏ - Скорпион\n♐ - Стрелец\n♑ - Козерог\n♒ - Водолей\n♓ - Рыбы\n\nДождитесь появления всех 12 реакций`))
+        .then(msg => {
+            msg.react('♈') //Овен
+            msg.react('♉') //Телец
+            msg.react('♊') //Близнецы
+            msg.react('♋') //Рак
+            msg.react('♌') //Лев
+            msg.react('♍') //Дева
+            msg.react('♎') //Весы
+            msg.react('♏') //Скорпион
+            msg.react('♐') //Стрелец
+            msg.react('♑') //Козерог
+            msg.react('♒') //Водолей
+            msg.react('♓') //Рыбы
+            msg.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
+            .then((collected) => {
+                const reaction = collected.first();
+                if (reaction.emoji.name === '♈') {
+                    message.reply('Выбрано - Овен');
+                }
+                if (reaction.emoji.name === '♉') {
+                    message.reply('Выбрано - Телец');
+                }
+                if (reaction.emoji.name === '♊') {
+                    message.reply('Выбрано - Близнецы');
+                }
+                if (reaction.emoji.name === '♋') {
+                    message.reply('Выбрано - Рак');
+                }
+                if (reaction.emoji.name === '♌') {
+                    message.reply('Выбрано - Лев');
+                }
+                if (reaction.emoji.name === '♍') {
+                    message.reply('Выбрано - Дева');
+                }
+                if (reaction.emoji.name === '♎') {
+                    message.reply('Выбрано - Весы');
+                }
+                if (reaction.emoji.name === '♏') {
+                    message.reply('Выбрано - Скорпион');
+                }
+                if (reaction.emoji.name === '♐') {
+                    message.reply('Выбрано - Стрелец');
+                }
+                if (reaction.emoji.name === '♑') {
+                    message.reply('Выбрано - Козерог');
+                }
+                if (reaction.emoji.name === '♒') {
+                    message.reply('Выбрано - Водолей');
+                }
+                if (reaction.emoji.name === '♓') {
+                    message.reply('Выбрано - Рыбы');
+                }
+            })
+            .catch((collected) => {
+                message.reply('Не указали знак');
+            })
+        });
+    }
+
 });
 
 /* Проверяем изменения голосовых каналов */
