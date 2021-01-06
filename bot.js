@@ -1403,68 +1403,142 @@ bot.on("message", function(message) {
 
     /* Команда гороскоп */
     else if (command === "0") {
+        //Фильтр для реакций
         const filter = (reaction, user) => {
             return ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'].includes(reaction.emoji.name) && user.id === message.author.id;
         };
-
-        message.reply(EmbMsg(':star: Гороскоп :star:', 0xAF6160, `Укажите знак задиака, нажав на соответсвующую реакцию под данным сообщением.\n\n♈ - Овен\n♉ - Телец\n♊ - Близнецы\n♋ - Рак\n♌ - Лев\n♍ - Дева\n♎ - Весы\n♏ - Скорпион\n♐ - Стрелец\n♑ - Козерог\n♒ - Водолей\n♓ - Рыбы\n\nДождитесь появления всех 12 реакций\n`))
+        //Отправляем сообщение для выбора зодиака
+        message.reply(EmbMsg(':star: Гороскоп :star:', 0xE98B14, `Укажите знак задиака, нажав на соответсвующую реакцию под данным сообщением.\n\n♈ - Овен\n♉ - Телец\n♊ - Близнецы\n♋ - Рак\n♌ - Лев\n♍ - Дева\n♎ - Весы\n♏ - Скорпион\n♐ - Стрелец\n♑ - Козерог\n♒ - Водолей\n♓ - Рыбы\n\nДождитесь появления всех 12 реакций\n\n`))
         .then(msg => {
-            msg.react('♈') //Овен
-            msg.react('♉') //Телец
-            msg.react('♊') //Близнецы
-            msg.react('♋') //Рак
-            msg.react('♌') //Лев
-            msg.react('♍') //Дева
-            msg.react('♎') //Весы
-            msg.react('♏') //Скорпион
-            msg.react('♐') //Стрелец
-            msg.react('♑') //Козерог
-            msg.react('♒') //Водолей
-            msg.react('♓') //Рыбы
+            //Выставляем реакции к сообщению
+            msg.react('♈')
+            msg.react('♉')
+            msg.react('♊')
+            msg.react('♋')
+            msg.react('♌')
+            msg.react('♍')
+            msg.react('♎')
+            msg.react('♏')
+            msg.react('♐')
+            msg.react('♑')
+            msg.react('♒')
+            msg.react('♓')
+            //Ожидание реакции от пользователя
             msg.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
             .then((collected) => {
                 const reaction = collected.first();
+                //Название знака
+                var znak = "", nameznak = "";
                 if (reaction.emoji.name === '♈') {
-                    var info = EmbMsg(':star: Гороскоп :star:', 0xAF6160, `Указали знак - Овен\n`);
-                    msg.reactions.removeAll().catch(error => console.error('Ошибка при очистке реакций: ', error));
-                    msg.edit(info);
+                    znak = "aries";
+                    nameznak = "Овен";
                 }
+                //Проверяем что было выбрано
                 if (reaction.emoji.name === '♉') {
-                    message.reply('Выбрано - Телец');
+                    znak = "taurus";
+                    nameznak = "Телец";
                 }
                 if (reaction.emoji.name === '♊') {
-                    message.reply('Выбрано - Близнецы');
+                    znak = "gemini";
+                    nameznak = "Близнецы";
                 }
                 if (reaction.emoji.name === '♋') {
-                    message.reply('Выбрано - Рак');
+                    znak = "cancer";
+                    nameznak = "Рак";
                 }
                 if (reaction.emoji.name === '♌') {
-                    message.reply('Выбрано - Лев');
+                    znak = "leo";
+                    nameznak = "Лев";
                 }
                 if (reaction.emoji.name === '♍') {
-                    message.reply('Выбрано - Дева');
+                    znak = "virgo";
+                    nameznak = "Дева";
                 }
                 if (reaction.emoji.name === '♎') {
-                    message.reply('Выбрано - Весы');
+                    znak = "libra";
+                    nameznak = "Весы";
                 }
                 if (reaction.emoji.name === '♏') {
-                    message.reply('Выбрано - Скорпион');
+                    znak = "scorpio";
+                    nameznak = "Скорпион";
                 }
                 if (reaction.emoji.name === '♐') {
-                    message.reply('Выбрано - Стрелец');
+                    znak = "sagittarius";
+                    nameznak = "Стрелец";
                 }
                 if (reaction.emoji.name === '♑') {
-                    message.reply('Выбрано - Козерог');
+                    znak = "capricorn";
+                    nameznak = "Козерог";
                 }
                 if (reaction.emoji.name === '♒') {
-                    message.reply('Выбрано - Водолей');
+                    znak = "aquarius";
+                    nameznak = "Водолей";
                 }
                 if (reaction.emoji.name === '♓') {
-                    message.reply('Выбрано - Рыбы');
+                    znak = "pisces";
+                    nameznak = "Рыбы";
                 }
+
+                //Удаляем реакции после выбора
+                msg.reactions.removeAll().catch(error => console.error('Ошибка при очистке реакций: ', error));
+
+                //Получаем сам гороскоп
+                var horo = "";
+                let link = "https://horoscopes.rambler.ru/api/front/v1/horoscope/today/" + znak;
+                console.log(link);
+                let urlEnc = encodeURI(link);
+                var options = {url: urlEnc, method: 'GET', json: true, headers: {'User-Agent': 'request', 'Accept-Language' : 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'}, timeout: 10000};
+                //Запрос
+                request(options, function(error, response, body){
+                    //Если возникла ошибка
+                    if (error) {
+                        console.log(error);
+                        //Изменяем Embed сообщение
+                        horo = EmbMsg(':no_entry_sign: Ошибка', 0xE98B14, `Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`).then(m => m.delete({timeout: 10000}));
+                        msg.edit(horo);
+                        return;
+                    } else {
+                        //Если есть ответ
+                        if (response) {
+                            //Если статус запроса 200
+                            if (response.statusCode == 200) {
+                                if (IsJsonString(body) == true) {
+                                    console.log("JSON");
+                                    var texthoro = body.text;
+                                    console.log(texthoro);
+                                    //Изменяем Embed сообщение
+                                    horo = EmbMsg(':star: Гороскоп :star:', 0xE98B14, `Гороскоп на сегодня для знака **${nameznak}**\n\n>> ${texthoro}\n\n`);
+                                    msg.edit(horo);
+                                    return;
+                                } else {
+                                    //Ошибка - не JSON
+                                    horo = EmbMsg(':no_entry_sign: Ошибка', 0xE98B14, `Произошла ошибка в данных.\nПопробуйте отправить команду позже.`).then(m => m.delete({timeout: 10000}));
+                                    msg.edit(horo);
+                                    return;
+                                }
+                            } else {
+                                //Неверный запрос || Доступ запрещён || Страница не найдена || Внутренняя ошибка сервера
+                                if (response.statusCode == 400 || response.statusCode == 403 || response.statusCode == 404 || response.statusCode == 500) {
+                                    horo = EmbMsg(':no_entry_sign: Ошибка', 0xE98B14, `Сервер с информацией недоступен.\nПопробуйте отправить команду позже.`).then(m => m.delete({timeout: 10000}));
+                                    msg.edit(horo);
+                                    return;
+                                }
+                            }
+                        } else {
+                            //Нет данных ответа сервера
+                            horo = EmbMsg(':no_entry_sign: Ошибка', 0xE98B14, `Произошла какая-то непредвиденная ошибка.\nПопробуйте отправить команду позже.`).then(m => m.delete({timeout: 10000}));
+                            msg.edit(horo);
+                            return;
+                        }
+                    }
+                });
             })
             .catch((collected) => {
-                message.reply('Не указали знак');
+                var infonoch = EmbMsg(':star: Гороскоп :star:', 0xE98B14, `Вы не выбрали знак зодиака.\nСообщение будет удалено автоматически.\n`);
+                //Удаляем реакции
+                msg.reactions.removeAll().catch(error => console.error('Ошибка при очистке реакций: ', error));
+                //Изменяем сообщение и удаляем
+                msg.edit(infonoch).then(m => m.delete({timeout: 10000}));
             })
         });
     }
@@ -1712,7 +1786,7 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                     } else {
                         newNick = 'По умолчанию';
                     }
-                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n\`${oldNick}\`\n**Новый ник:**\n\`${newNick}\`\n\nКто сменил:\n<@${userID}>`;
+                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n\`${oldNick}\`\n**Н����вый ник:**\n\`${newNick}\`\n\nКто сменил:\n<@${userID}>`;
                     //Отправляем сообщение
                     sysCh.send(EmbMsg(':repeat: **[ИЗМЕНЕН СЕРВЕРНЫЙ НИК]**', 0x50E3C2, info));
                 })
