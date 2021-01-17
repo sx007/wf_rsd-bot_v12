@@ -878,7 +878,7 @@ bot.on("message", function(message) {
             //Игровой сервер
             clInfo += "**Сервер:**   ``" + numSrvToStr(srv) + "``\n";
             //Глава клана
-            clInfo += "**Глава клана:**   ``" + data.clan_leader + "``\n";
+            clInfo += "**Глава клан��:**   ``" + data.clan_leader + "``\n";
             //Бойцов в клане
             clInfo += "**Бойцов в клане:**   ``" + data.members + "``\n";
             //Место клана -> число
@@ -1587,18 +1587,32 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
 
     //Пользователь подключился к голосовому каналу
     if(!oldState.channel && newState.channel) {
-        let info = `Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nподключился к каналу:  ${newChannel.name}`;
+        let info = `Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nподключился к каналу:\n${newChannel.name}`;
         sysCh.send(EmbedMsg(0x005F31, info));
     }
     //Пользователь вышел из голосового канала
     if(oldState.channel && !newState.channel) {
-        let info = `Пользователь <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nпокинул канал:  ${oldChannel.name}`;
+        let info = `Пользователь <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nпокинул канал:\n${oldChannel.name}`;
         sysCh.send(EmbedMsg(0x5F0000, info));
     }
     //Пользователь перешёл из голосового канала в другой
     if(oldState.channel && newState.channel && newChannel !== oldChannel) {
-        let info = `Пользователь <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nперешёл из канала:  ${oldChannel.name}\nв канал:  ${newChannel.name}`;
-        sysCh.send(EmbedMsg(0x002D5F, info));
+        //Получаем информацию из логов
+        newMember.guild.fetchAuditLogs().then(logs => {
+            //Получения последней записи в логах
+            let firstEv = logs.entries.first();
+            //Сравниваем дату последнего лога и текущей даты
+            if (Date.now() - firstEv.createdTimestamp < 5000) {
+                //Получения id пользователя, который выполнил непосредственно
+                let userID = logs.entries.first().executor.id;
+                var info = `Пользователя <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nперетащили из канала:\n${oldChannel.name}\nв канал:\n${newChannel.name}\n\nКто перетащил:\n<@${userID}>`;
+            } else {
+                //Если пользователь сам перешёл в голосовой канал
+                var info = `Пользователь <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nперешёл из канала:\n${oldChannel.name}\nв канал:\n${newChannel.name}`;
+            }
+            //Отправляем сообщение
+            sysCh.send(EmbedMsg(0x002D5F, info));
+        });
     }
     //Пользователь выключил микрофон
     if(oldState.selfMute === false && newState.selfMute === true) {
@@ -1792,7 +1806,7 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                     } else {
                         newNick = 'По умолчанию';
                     }
-                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n\`${oldNick}\`\n**Н����вый ник:**\n\`${newNick}\`\n\nКто сменил:\n<@${userID}>`;
+                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n\`${oldNick}\`\n**Новый ник:**\n\`${newNick}\`\n\nКто сменил:\n<@${userID}>`;
                     //Отправляем сообщение
                     sysCh.send(EmbMsg(':repeat: **[ИЗМЕНЕН СЕРВЕРНЫЙ НИК]**', 0x50E3C2, info));
                 })
