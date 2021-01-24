@@ -1509,7 +1509,9 @@ bot.on("message", function(message) {
                             //Если статус запроса 200
                             if (response.statusCode == 200) {
                                 if (IsJsonString(body) == true) {
-                                    var texthoro = body.text;
+                                    var regex = /(<([^>]+)>)/ig;
+                                    var bodytext = body.text;
+                                    var texthoro = bodytext.replace(regex, "");
                                     //Изменяем Embed сообщение
                                     horo = EmbMsg(':star: Гороскоп :star:', 0xE98B14, `Гороскоп на сегодня для знака **${nameznak}**\n\n>>> ${texthoro}\n\n`);
                                     msg.edit(horo);
@@ -1828,21 +1830,21 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                 })
                 break;
             //Удаление прав/роли
-                case Changes.removedRole:
-                //Ковыряемся в Журнале серверном
-                newMember.guild.fetchAuditLogs().then(logs => {
-                    //Получения id пользователя, который выполнил непосредственно
-                    var userID = logs.entries.first().executor.id;
-                    let nickuser = newMember.nickname;
-                    if (nickuser == null) {
-                        nickuser = 'По умолчанию';
-                    }
-                    //формируем сообщение
-                    info = `**Кому удалили:**<@${newMember.id}>\nНик: \`${nickuser}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Роль:**\n __${removedRole}__\n\nКто удалил:\n<@${userID}>`;
-                    //Отправляем сообщение
-                    sysCh.send(EmbMsg(':warning: **[УДАЛЕНА РОЛЬ]**', 0x50E3C2, info));
-                })
-                break;
+            case Changes.removedRole:
+            //Ковыряемся в Журнале серверном
+            newMember.guild.fetchAuditLogs().then(logs => {
+                //Получения id пользователя, который выполнил непосредственно
+                var userID = logs.entries.first().executor.id;
+                let nickuser = newMember.nickname;
+                if (nickuser == null) {
+                    nickuser = 'По умолчанию';
+                }
+                //формируем сообщение
+                info = `**Кому удалили:**<@${newMember.id}>\nНик: \`${nickuser}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Роль:**\n __${removedRole}__\n\nКто удалил:\n<@${userID}>`;
+                //Отправляем сообщение
+                sysCh.send(EmbMsg(':warning: **[УДАЛЕНА РОЛЬ]**', 0x50E3C2, info));
+            })
+            break;
         }
     }
 });
