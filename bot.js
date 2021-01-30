@@ -66,33 +66,7 @@ bot.on("message", function(message) {
             return false;
         }
     }
-    /*
-    //Проверка ролей пользователя
-    function hasRole(mem, r){
-        if (mem.roles.cache.some(role => role.name === r)){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
 
-    //Проверка наличия пользователя на сервере
-    function existInSrv(){
-        //указываем на каком сервере искать
-        let guild = bot.guilds.cache.get(idSrv);
-        //Получаем ID пользователя отправившего сообщение
-        let userID = message.author.id;
-        //Если есть на указанном сервере
-        if (guild.member(userID)) {
-            //console.log('Есть пользователь на сервере');
-            return true;
-        } else {
-            //console.log('Нет пользователя на сервере');
-            return false;
-        }
-    }
-    */
     //Проверка ролей Администратора и Модераторов по ID из переменной (конфигурации)
     function hasRoleId(mem){
         var idRepl = idAdmMod.replace(/ +/g, ' ');
@@ -362,7 +336,7 @@ bot.on("message", function(message) {
                 return totalT;
             }
             var timeOnline = Date.now()-startBot;
-            message.reply(EmbMsg(':robot: О БОТЕ', 0x82E9FF, `\n**Версия бота: **${json.version}\n**Автор бота:**\n<@${autorID}>\n\n**Работает в сети:**\n${msToTime(timeOnline)}\n\n**Пользователей на сервере: **${memCount}`));
+            message.reply(EmbMsg(':robot: О БОТЕ', 0x82E9FF, `\n**Версия бота: **${json.version}\n**Автор бота:** <@${autorID}>\n\n**Работает в сети:**\n${msToTime(timeOnline)}\n\n**Пользователей на сервере: **${memCount}`));
         }
         if(numArg > 2) {
             //Выдаём справку по данной команде
@@ -878,7 +852,7 @@ bot.on("message", function(message) {
             //Игровой сервер
             clInfo += "**Сервер:**   ``" + numSrvToStr(srv) + "``\n";
             //Глава клана
-            clInfo += "**Глава клан��:**   ``" + data.clan_leader + "``\n";
+            clInfo += "**Глава клана:**   ``" + data.clan_leader + "``\n";
             //Бойцов в клане
             clInfo += "**Бойцов в клане:**   ``" + data.members + "``\n";
             //Место клана -> число
@@ -1594,7 +1568,7 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
     }
     //Пользователь вышел из голосового канала
     if(oldState.channel && !newState.channel) {
-        let info = `Пользователь <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nпокинул канал:\n${oldChannel.name}`;
+        let info = `Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nпокинул канал:\n${oldChannel.name}`;
         sysCh.send(EmbedMsg(0x5F0000, info));
     }
     //Пользователь перешёл из голосового канала в другой
@@ -1607,10 +1581,10 @@ bot.on("voiceStateUpdate", (oldState, newState) => {
             if (Date.now() - firstEv.createdTimestamp < 5000) {
                 //Получения id пользователя, который выполнил непосредственно
                 let userID = logs.entries.first().executor.id;
-                var info = `Пользователя <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nперетащили из канала:\n${oldChannel.name}\nв канал:\n${newChannel.name}\n\nКто перетащил:\n<@${userID}>`;
+                var info = `Пользователя <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nперетащили из канала:\n${oldChannel.name}\nв канал:\n${newChannel.name}\n\nКто перетащил:\n<@${userID}>`;
             } else {
                 //Если пользователь сам перешёл в голосовой канал
-                var info = `Пользователь <@${oldMember.id}> \nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nперешёл из канала:\n${oldChannel.name}\nв канал:\n${newChannel.name}`;
+                var info = `Пользователь <@${oldMember.id}>\nНик: \`${srvNick}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\nперешёл из канала:\n${oldChannel.name}\nв канал:\n${newChannel.name}`;
             }
             //Отправляем сообщение
             sysCh.send(EmbedMsg(0x002D5F, info));
