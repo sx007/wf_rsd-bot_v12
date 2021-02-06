@@ -870,7 +870,7 @@ bot.on("message", function(message) {
                         clInfo += "**Место в лиге:**   ``" + ((numRank-10)+1) + "``\n";
                     }
                     if (numRank  > 100 && numRank <= 500) {
-                        clInfo += "**Лига:**   ``Золотая``\n";
+                        clInfo += "**����������ига:**   ``Золотая``\n";
                         clInfo += "**Место в лиге:**   ``" + ((numRank-100)+1) + "``\n";
                     }
                     if (numRank  > 500 && numRank <= 1000) {
@@ -1529,8 +1529,8 @@ bot.on("message", function(message) {
 
 /* Проверяем изменения голосовых каналов */
 bot.on("voiceStateUpdate", (oldState, newState) => {
-    //console.log(oldState);
-    //console.log(newState);
+    //console.log("🔴", oldState.voiceChannel);
+    //console.log("🔵", newState.voiceChannel);
     //Проверяем наличие канала, куда будем отправлять сообщение
     let logChannel = bot.channels.cache.find(ch => ch.id === idChMsg);
     if(!logChannel) return;
@@ -1759,7 +1759,7 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                 break;
             //Смена ника пользователя
             case Changes.username:
-                info = `Пользователь сменивший личный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n${oldMember.user.username}#${oldMember.user.discriminator}\n**Новый ник:**\n${newMember.user.username}#${newMember.user.discriminator}`;
+                info = `Пользователь сменивший личный ник: <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\n**Старый ник:**\n${oldMember.user.username}#${oldMember.user.discriminator}\n**Новый ник:**\n${newMember.user.username}#${newMember.user.discriminator}`;
                 sysCh.send(EmbMsg('**[ИЗМЕНЕН ЛИЧНЫЙ НИК]**', 0x50E3C2, info));
                 break;
             //Смена серверного ника
@@ -1782,7 +1782,7 @@ bot.on('guildMemberUpdate', function(oldMember, newMember) {
                     } else {
                         newNick = 'По умолчанию';
                     }
-                    info = `У кого сменился серверный ник: <@${newMember.id}>\nНик: \`${newMember.nickname}\`\nTag: \`${newMember.user.username}#${newMember.user.discriminator}\`\n\n**Старый ник:**\n\`${oldNick}\`\n**Новый ник:**\n\`${newNick}\`\n\nКто сменил:\n<@${userID}>`;
+                    info = `У кого сменился серверный ник: <@${oldMember.id}>\nНик: \`${oldMember.nickname}\`\nTag: \`${oldMember.user.username}#${oldMember.user.discriminator}\`\n\n**Старый ник:**\n\`${oldNick}\`\n**Новый ник:**\n\`${newNick}\`\n\nКто сменил:\n<@${userID}>`;
                     //Отправляем сообщение
                     sysCh.send(EmbMsg(':repeat: **[ИЗМЕНЕН СЕРВЕРНЫЙ НИК]**', 0x50E3C2, info));
                 })
