@@ -870,7 +870,7 @@ bot.on("message", function(message) {
                         clInfo += "**Место в лиге:**   ``" + ((numRank-10)+1) + "``\n";
                     }
                     if (numRank  > 100 && numRank <= 500) {
-                        clInfo += "**����������ига:**   ``Золотая``\n";
+                        clInfo += "**Лига:**   ``Золотая``\n";
                         clInfo += "**Место в лиге:**   ``" + ((numRank-100)+1) + "``\n";
                     }
                     if (numRank  > 500 && numRank <= 1000) {
