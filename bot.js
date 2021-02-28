@@ -355,7 +355,9 @@ bot.on("message", function(message) {
         //Проверяем куда была отправленна данная команда
         if (privateMsg() == false){
             //публично
-            if (hasRoleId(message.member)){
+            //Получаем ID владельца сервера
+            const ownerSrvID = bot.guilds.cache.map(guild => guild.ownerID).join("\n");
+            if (hasRoleId(message.member) && message.member.id === ownerSrvID){
                 //И есть права необходимые
                 if(numArg >= 3){
                     message.channel.send(`:exclamation: Ты указал много аргументов.\nИспользуй команду: \`${prefix}удалить (количество сообщений)\``);
@@ -870,7 +872,7 @@ bot.on("message", function(message) {
                         clInfo += "**Место в лиге:**   ``" + ((numRank-10)+1) + "``\n";
                     }
                     if (numRank  > 100 && numRank <= 500) {
-                        clInfo += "**Лига:**   ``Золотая``\n";
+                        clInfo += "**��ига:**   ``Золотая``\n";
                         clInfo += "**Место в лиге:**   ``" + ((numRank-100)+1) + "``\n";
                     }
                     if (numRank  > 500 && numRank <= 1000) {
