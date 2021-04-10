@@ -248,9 +248,9 @@ bot.on("message", function(message) {
             //Проверяем автора - владелец ли сервера
             if (message.member.id === ownerSrvID) {
                 //Если владелец, то перезапускаем бота
-                message.reply(`:robot: :repeat: **Бот перезапускается!**`).then(m => m.delete({timeout: 15000}));
+                //message.reply(`:robot: :repeat: **Бот перезапускается!**`).then(m => m.delete({timeout: 15000}));
                 console.log("Restart bot ...");
-                restart();
+                process.exit(1);
             } else {
                 //Если нет прав
                 message.reply(`:no_entry: **У вас нет прав для данной команды!**`).then(m => m.delete({timeout: 20000}));
@@ -260,17 +260,13 @@ bot.on("message", function(message) {
             //Проверяем автора - владелец ли сервера
             if (message.author.id === ownerSrvID) {
                 //Если владелец, то перезапускаем бота
-                message.reply(`:robot: :repeat: **Бот перезапускается!**`);
+                //message.reply(`:robot: :repeat: **Бот перезапускается!**`);
                 console.log("Restart bot ...");
-                restart();
+                process.exit(1);
             } else {
                 //Если нет прав
                 message.reply(`:no_entry: **У вас нет прав для данной команды!**`);
             }
-        }
-        //Функция перезапуска
-        function restart() {
-            return process.exit(1);
         }
     }
 
