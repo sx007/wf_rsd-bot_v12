@@ -1,6 +1,6 @@
 {
   "name": "wf_rsd-bot-v12",
-  "version": "12.2021.02.28",
+  "version": "12.2021.04.10",
   "description": "Bot for clan.",
   "main": "bot.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "sx007",
   "dependencies": {
     "express": "^4.17.1",
-    "discord.js": "^12.5.1",
+    "discord.js": "^12.5.2",
     "request": "^2.88.2"
   },
   "engines": {
