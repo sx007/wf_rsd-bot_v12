@@ -3,6 +3,8 @@
 </p>
 
 
+Данная версия бота не поддерживается автором.
+======
 | Информация | Описание |
 | --- | --- |
 | Версия бота | <a href="https://github.com/sx007/wf_rsd-bot_v12/blob/main/changelog.md"><img src="https://img.shields.io/badge/dynamic/json?color=brightgreen&url=https://raw.githubusercontent.com/sx007/wf_rsd-bot_v12/main/package.json&query=$.version&label=Version" alt="Version"></a> |
