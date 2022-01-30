@@ -13,6 +13,9 @@
 | Группа в ВК | <a href="https://vk.com/wf_rsd"><img src="https://img.shields.io/badge/vk.com-wf__rsd-blue" alt="VK"></a> |
 | Discord сервер | <a href="https://discord.gg/PR57GzV"><img src="https://discordapp.com/api/guilds/307431674671792129/widget.png" alt="Discord server"></a> |
 
+Данная версия бота не поддерживается автором.
+======
+
 # Про бота
 > Данный бот изначально был создан для ведения статистики по серверу Discord клана. 
 
